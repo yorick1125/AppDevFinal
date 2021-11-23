@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 
 import com.example.flashcardapplication.model.Deck;
-
+import com.example.flashcardapplication.databinding.FragmentHomePageBinding;
 import java.util.List;
 
 /**
@@ -33,7 +33,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = decks.get(position);
-        holder.mIdView.setText(decks.get(position).getId());
+        holder.mIdView.setText(decks.get(position).getId().intValue());
         holder.mContentView.setText(decks.get(position).getTitle());
     }
 
