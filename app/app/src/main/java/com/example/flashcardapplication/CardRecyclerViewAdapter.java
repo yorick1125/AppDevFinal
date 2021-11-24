@@ -33,8 +33,8 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerVi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.card = cards.get(position);
-        holder.mIdView.setText(cards.get(position).getId().intValue());
-        holder.mContentView.setText(cards.get(position).getFront());
+        holder.question.setText(cards.get(position).getFront());
+        holder.answer.setText(cards.get(position).getBack());
     }
 
     @Override
@@ -43,19 +43,19 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerVi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView question;
+        public final TextView answer;
         public Card card;
 
         public ViewHolder(FragmentCardListItemBinding binding) {
             super(binding.getRoot());
-            mIdView = binding.itemNumber;
-            mContentView = binding.content;
+            question = binding.cardQuestion;
+            answer = binding.cardAnswer;
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + question.getText() + "'" + answer.getText() + "'";
         }
     }
 }

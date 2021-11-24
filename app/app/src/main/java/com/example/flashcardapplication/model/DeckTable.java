@@ -5,9 +5,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.flashcardapplication.enums.Subjects;
 import com.example.flashcardapplication.sqlite.Column;
 import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.example.flashcardapplication.sqlite.Table;
+
+import java.util.Date;
 
 public class DeckTable extends Table<Deck> {
 
@@ -36,7 +39,9 @@ public class DeckTable extends Table<Deck> {
     protected Deck fromCursor(Cursor cursor) throws DatabaseException {
         Deck deck = new Deck()
                 .setDeckId(cursor.getLong(0))
-                .setTitle(cursor.getString(1));
+                .setTitle(cursor.getString(1))
+                .setDueDate(new Date(cursor.getLong(2)))
+                .setSubject(Subjects.values()[cursor.getInt(3)]);
         return deck;
     }
 
