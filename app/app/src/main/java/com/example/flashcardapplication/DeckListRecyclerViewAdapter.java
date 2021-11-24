@@ -32,9 +32,9 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = decks.get(position);
-        holder.mIdView.setText(decks.get(position).getId().intValue());
-        holder.mContentView.setText(decks.get(position).getTitle());
+        holder.deck = decks.get(position);
+        holder.nameTextView.setText(decks.get(position).getId().intValue());
+        holder.subjectTextView.setText(decks.get(position).getTitle());
     }
 
     @Override
@@ -43,19 +43,24 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public Deck mItem;
+        public final TextView nameTextView;
+        public final TextView subjectTextView;
+        public Deck deck;
 
         public ViewHolder(FragmentHomePageBinding binding) {
             super(binding.getRoot());
+<<<<<<< Updated upstream
             mIdView = binding.itemNumber;
             mContentView = binding.content;
+=======
+            nameTextView = binding.deckName;
+            subjectTextView = binding.deckSubject;
+>>>>>>> Stashed changes
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + subjectTextView.getText() + "'";
         }
     }
 }

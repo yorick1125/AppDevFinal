@@ -9,15 +9,53 @@ public class Deck implements Identifiable<Long> {
     private String title;
     private List<Card> cards;
 
+    public static List<Deck> getDefaultDecks(){
+        List<Deck> cards = new ArrayList<>();
+        cards.add(new Deck().setTitle("title"));
+        cards.add(new Deck().setTitle("title"));
+        cards.add(new Deck().setTitle("title"));
+        return cards;
+    }
+
     public Deck(){
         this.id = 0L;
         this.title = "";
     }
 
+<<<<<<< Updated upstream
     public Deck(Long id, String title){
         this.id = id;
         this.title = title;
     }
+=======
+    public Deck(Long id, String title, List<Card> cards, Date dueDate, Subjects subject){
+        this.id = id;
+        this.title = title;
+        this.cards = cards;
+        this.dueDate = dueDate;
+        this.subject = subject;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public Deck setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+        return this;
+    }
+
+    public Subjects getSubject() {
+        return subject;
+    }
+
+    public Deck setSubject(Subjects subject) {
+        this.subject = subject;
+        return this;
+    }
+
+
+>>>>>>> Stashed changes
 
     public Long getId(){
         return id;

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,7 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.model.Deck;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -61,14 +65,26 @@ public class HomePageFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.deckRecyclerView);
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new DeckListRecyclerViewAdapter(new ArrayList<Deck>()));
+            System.out.println(Deck.getDefaultDecks());
+            recyclerView.setAdapter(new DeckListRecyclerViewAdapter(Deck.getDefaultDecks()));
         }
+
+        FloatingActionButton fab = view.findViewById(R.id.addDeckFAB);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
+                navController.navigate(R.id.action_homePageFragment_to_cardListFragment);
+            }
+        });
+
+
         return view;
     }
 }
