@@ -6,30 +6,14 @@
     app:startDestination="@id/homePageFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.example.flashcardapplication.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
-
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.flashcardapplication.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/editCardFragment"
         android:name="com.example.flashcardapplication.EditCardFragment"
         android:label="Edit Card"
-        tools:layout="@layout/fragment_edit_card" />
+        tools:layout="@layout/fragment_edit_card" >
+        <action
+            android:id="@+id/action_editCardFragment_to_cardListFragment"
+            app:destination="@id/cardListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/homePageFragment"
         android:name="com.example.flashcardapplication.HomePageFragment"
@@ -38,6 +22,9 @@
         <action
             android:id="@+id/action_homePageFragment_to_cardListFragment"
             app:destination="@id/cardListFragment" />
+        <action
+            android:id="@+id/action_homePageFragment_to_studyModeFragment"
+            app:destination="@id/studyModeFragment" />
     </fragment>
     <fragment
         android:id="@+id/cardListFragment"
@@ -47,5 +34,17 @@
         <action
             android:id="@+id/action_cardListFragment_to_editCardFragment"
             app:destination="@id/editCardFragment" />
+        <action
+            android:id="@+id/action_cardListFragment_to_homePageFragment2"
+            app:destination="@id/homePageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/studyModeFragment"
+        android:name="com.example.flashcardapplication.StudyModeFragment"
+        android:label="fragment_study_mode"
+        tools:layout="@layout/fragment_study_mode" >
+        <action
+            android:id="@+id/action_studyModeFragment_to_homePageFragment"
+            app:destination="@id/homePageFragment" />
     </fragment>
 </navigation>
