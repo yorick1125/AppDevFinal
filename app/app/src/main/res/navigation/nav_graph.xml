@@ -28,12 +28,12 @@
     <fragment
         android:id="@+id/editCardFragment"
         android:name="com.example.flashcardapplication.EditCardFragment"
-        android:label="fragment_edit_card"
+        android:label="Edit Card"
         tools:layout="@layout/fragment_edit_card" />
     <fragment
         android:id="@+id/homePageFragment"
         android:name="com.example.flashcardapplication.HomePageFragment"
-        android:label="fragment_home_page_list"
+        android:label="Homepage"
         tools:layout="@layout/fragment_home_page_list">
         <action
             android:id="@+id/action_homePageFragment_to_cardListFragment"
@@ -42,7 +42,7 @@
     <fragment
         android:id="@+id/cardListFragment"
         android:name="com.example.flashcardapplication.CardListFragment"
-        android:label="fragment_card_list"
+        android:label="CardList"
         tools:layout="@layout/fragment_card_list">
         <action
             android:id="@+id/action_cardListFragment_to_editCardFragment"
