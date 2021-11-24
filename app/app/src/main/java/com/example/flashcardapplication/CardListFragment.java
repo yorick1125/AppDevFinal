@@ -12,7 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.flashcardapplication.placeholder.PlaceholderContent;
+import com.example.flashcardapplication.model.Card;
+import com.example.flashcardapplication.model.Deck;
+
+import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -64,7 +67,7 @@ public class CardListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new CardRecyclerViewAdapter(PlaceholderContent.ITEMS));
+            recyclerView.setAdapter(new CardRecyclerViewAdapter(new ArrayList<Card>()));
         }
         return view;
     }

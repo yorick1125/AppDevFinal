@@ -2,9 +2,12 @@ package com.example.flashcardapplication.model;
 
 import com.example.flashcardapplication.sqlite.Identifiable;
 
+import java.util.List;
+
 public class Deck implements Identifiable<Long> {
     private Long id;
     private String title;
+    private List<Card> cards;
 
     public Deck(){
         this.id = 0L;
@@ -47,7 +50,17 @@ public class Deck implements Identifiable<Long> {
     public static void read(int id){
 
     }
-    public void update(int id, String front, String back){
+
+    public List<Card> getCards() {
+        return cards;
+    }
+
+    public Deck setCards(List<Card> cards) {
+        this.cards = cards;
+        return this;
+    }
+
+    public void update(int id, String title){
 
     }
     public void delete(){
