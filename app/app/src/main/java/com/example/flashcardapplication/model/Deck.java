@@ -1,25 +1,39 @@
 package com.example.flashcardapplication.model;
 
-import com.example.flashcardapplication.enums.Subjects;
 import com.example.flashcardapplication.sqlite.Identifiable;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Deck implements Identifiable<Long> {
     private Long id;
     private String title;
     private List<Card> cards;
-    private Date dueDate;
-    private Subjects subject;
+
+    public static List<Deck> getDefaultDecks(){
+        List<Deck> cards = new ArrayList<>();
+        cards.add(new Deck().setTitle("title"));
+        cards.add(new Deck().setTitle("title"));
+        cards.add(new Deck().setTitle("title"));
+        return cards;
+    }
 
     public Deck(){
         this.id = 0L;
         this.title = "";
-        this.cards = new ArrayList<Card>();
-        this.dueDate = new Date();
-        this.subject = Subjects.None;
+    }
+
+<<<<<<< Updated upstream
+    public Deck(Long id, String title){
+        this.id = id;
+        this.title = title;
+    }
+=======
+    public Deck(Long id, String title, List<Card> cards, Date dueDate, Subjects subject){
+        this.id = id;
+        this.title = title;
+        this.cards = cards;
+        this.dueDate = dueDate;
+        this.subject = subject;
     }
 
     public Date getDueDate() {
@@ -40,13 +54,8 @@ public class Deck implements Identifiable<Long> {
         return this;
     }
 
-    public Deck(Long id, String title, List<Card> cards, Date dueDate, Subjects subject){
-        this.id = id;
-        this.title = title;
-        this.cards = cards;
-        this.dueDate = dueDate;
-        this.subject = subject;
-    }
+
+>>>>>>> Stashed changes
 
     public Long getId(){
         return id;

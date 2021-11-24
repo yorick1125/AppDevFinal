@@ -67,7 +67,7 @@ public class CardListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new CardRecyclerViewAdapter(new ArrayList<Card>()));
+            recyclerView.setAdapter(new CardRecyclerViewAdapter(Card.getDefaultCards()));
         }
         return view;
     }

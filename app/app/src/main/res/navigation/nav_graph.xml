@@ -42,7 +42,7 @@
     <fragment
         android:id="@+id/cardListFragment"
         android:name="com.example.flashcardapplication.CardListFragment"
-        android:label="CardList"
+        android:label="Deck"
         tools:layout="@layout/fragment_card_list">
         <action
             android:id="@+id/action_cardListFragment_to_editCardFragment"
