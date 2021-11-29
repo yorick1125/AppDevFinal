@@ -1,13 +1,18 @@
 package com.example.flashcardapplication.model;
 
+import com.example.flashcardapplication.enums.Subjects;
 import com.example.flashcardapplication.sqlite.Identifiable;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Deck implements Identifiable<Long> {
     private Long id;
     private String title;
     private List<Card> cards;
+    private Date dueDate;
+    private Subjects subject;
 
     public static List<Deck> getDefaultDecks(){
         List<Deck> cards = new ArrayList<>();
@@ -22,12 +27,11 @@ public class Deck implements Identifiable<Long> {
         this.title = "";
     }
 
-<<<<<<< Updated upstream
     public Deck(Long id, String title){
         this.id = id;
         this.title = title;
     }
-=======
+
     public Deck(Long id, String title, List<Card> cards, Date dueDate, Subjects subject){
         this.id = id;
         this.title = title;
@@ -54,8 +58,6 @@ public class Deck implements Identifiable<Long> {
         return this;
     }
 
-
->>>>>>> Stashed changes
 
     public Long getId(){
         return id;
