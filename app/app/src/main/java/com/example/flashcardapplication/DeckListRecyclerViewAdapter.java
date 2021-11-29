@@ -49,13 +49,8 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
 
         public ViewHolder(FragmentHomePageBinding binding) {
             super(binding.getRoot());
-<<<<<<< Updated upstream
-            mIdView = binding.itemNumber;
-            mContentView = binding.content;
-=======
             nameTextView = binding.deckName;
             subjectTextView = binding.deckSubject;
->>>>>>> Stashed changes
         }
 
         @Override
