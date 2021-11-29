@@ -2,10 +2,21 @@ package com.example.flashcardapplication.model;
 
 import com.example.flashcardapplication.sqlite.Identifiable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Card implements Identifiable<Long> {
     private Long id;
     private String front;
     private String back;
+
+    public static List<Card> getDefaultCards(){
+        List<Card> cards = new ArrayList<>();
+        cards.add(new Card(1L, "front", "back"));
+        cards.add(new Card(1L, "front", "back"));
+        cards.add(new Card(1L, "front", "back"));
+        return cards;
+    }
 
     public Card(){
         this.id = 0L;

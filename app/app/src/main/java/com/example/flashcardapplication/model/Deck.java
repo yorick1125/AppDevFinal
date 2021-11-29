@@ -14,12 +14,30 @@ public class Deck implements Identifiable<Long> {
     private Date dueDate;
     private Subjects subject;
 
+    public static List<Deck> getDefaultDecks(){
+        List<Deck> cards = new ArrayList<>();
+        cards.add(new Deck().setTitle("title"));
+        cards.add(new Deck().setTitle("title"));
+        cards.add(new Deck().setTitle("title"));
+        return cards;
+    }
+
     public Deck(){
         this.id = 0L;
         this.title = "";
-        this.cards = new ArrayList<Card>();
-        this.dueDate = new Date();
-        this.subject = Subjects.None;
+    }
+
+    public Deck(Long id, String title){
+        this.id = id;
+        this.title = title;
+    }
+
+    public Deck(Long id, String title, List<Card> cards, Date dueDate, Subjects subject){
+        this.id = id;
+        this.title = title;
+        this.cards = cards;
+        this.dueDate = dueDate;
+        this.subject = subject;
     }
 
     public Date getDueDate() {
@@ -40,13 +58,6 @@ public class Deck implements Identifiable<Long> {
         return this;
     }
 
-    public Deck(Long id, String title, List<Card> cards, Date dueDate, Subjects subject){
-        this.id = id;
-        this.title = title;
-        this.cards = cards;
-        this.dueDate = dueDate;
-        this.subject = subject;
-    }
 
     public Long getId(){
         return id;
