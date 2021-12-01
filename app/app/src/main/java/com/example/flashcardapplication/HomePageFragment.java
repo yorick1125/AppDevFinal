@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,7 @@ public class HomePageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_page_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
+        //if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.deckRecyclerView);
             if (mColumnCount <= 1) {
@@ -71,9 +72,9 @@ public class HomePageFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            System.out.println(Deck.getDefaultDecks());
+
             recyclerView.setAdapter(new DeckListRecyclerViewAdapter(Deck.getDefaultDecks()));
-        }
+        //}
 
         FloatingActionButton fab = view.findViewById(R.id.addDeckFAB);
         fab.setOnClickListener(new View.OnClickListener() {
