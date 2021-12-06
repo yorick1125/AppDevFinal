@@ -10,10 +10,14 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.flashcardapplication.databinding.FragmentStudyModeBinding;
+import com.example.flashcardapplication.model.Deck;
 
 public class StudyModeFragment extends Fragment {
 
     private FragmentStudyModeBinding binding;
+    private Deck deck;
+    private MainActivity activity;
+    private int index;
 
     @Override
     public View onCreateView(
@@ -22,6 +26,9 @@ public class StudyModeFragment extends Fragment {
     ) {
 
         binding = FragmentStudyModeBinding.inflate(inflater, container, false);
+        activity = (MainActivity) this.getActivity();
+        deck = activity.getDeckViewModel().getDeck();
+        index = 0;
         return binding.getRoot();
 
     }
@@ -29,6 +36,8 @@ public class StudyModeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        binding.txtDeckTitle.setText(deck.getTitle());
+        //binding.cardFront.setText(deck.getCards().get(index).getFront());
         binding.layoutStudyResult.setVisibility(View.INVISIBLE);
         binding.layoutStudyAnswer.setVisibility(View.INVISIBLE);
 
