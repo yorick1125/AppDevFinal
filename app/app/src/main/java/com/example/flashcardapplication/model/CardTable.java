@@ -14,6 +14,7 @@ public class CardTable extends Table<Card> {
     public static final String TABLE_NAME = "card";
     public static final String COLUMN_FRONT = "front";
     public static final String COLUMN_BACK = "back";
+    public static final String COLUMN_DECKID = "deckId";
 
 
     /**
@@ -25,6 +26,7 @@ public class CardTable extends Table<Card> {
         super(dbh, TABLE_NAME);
         addColumn(new Column(COLUMN_FRONT, Column.Type.TEXT));
         addColumn(new Column(COLUMN_BACK, Column.Type.TEXT));
+        addColumn(new Column(COLUMN_DECKID , Column.Type.TEXT));
     }
 
     @Override
@@ -32,6 +34,7 @@ public class CardTable extends Table<Card> {
         ContentValues values = new ContentValues();
         values.put(COLUMN_FRONT, card.getFront());
         values.put(COLUMN_BACK, card.getBack());
+        values.put(COLUMN_DECKID, card.getDeckId());
         return values;
     }
 
@@ -40,7 +43,9 @@ public class CardTable extends Table<Card> {
         Card card = new Card()
                 .setCardId(cursor.getLong(0))
                 .setFront(cursor.getString(1))
-                .setBack(cursor.getString(3));
+                .setBack(cursor.getString(2))
+                .setDeckId(cursor.getLong(3));
+
         return card;
     }
 
@@ -52,7 +57,7 @@ public class CardTable extends Table<Card> {
     @Override
     public void initialize(SQLiteDatabase database) {
         // to do this is just placeholder code
-        Card card = new Card();
+        Card card = new Card("when did ww1 end?", "1918", 1L);
         try {
             database.insert(TABLE_NAME, null, toContentValues(card));
         } catch (DatabaseException e) {

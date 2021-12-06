@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.example.flashcardapplication.databinding.FragmentCardListBinding;
 import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.model.Deck;
+import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.example.flashcardapplication.utils.DatePickerDialogFragment;
 import com.example.flashcardapplication.utils.TimePickerDialogFragment;
 
@@ -30,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -43,6 +46,7 @@ public class CardListFragment extends Fragment {
 
     private Deck deck;
     private FragmentCardListBinding binding;
+    private MainActivity activity;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -74,8 +78,8 @@ public class CardListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_card_list, container, false);
-        MainActivity activity = (MainActivity) getActivity();
-        deck = new Deck();
+        activity = (MainActivity) getActivity();
+        deck = activity.getDeckViewModel().getDeck();
         //binding = FragmentCardListBinding.inflate(inflater, container, false);
 
         // Set the adapter
@@ -87,7 +91,25 @@ public class CardListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new CardRecyclerViewAdapter(Card.getDefaultCards()));
+            /*
+        List<Card> cards = null;
+        try {
+            cards = activity.getCardDBHandler().getCardTable().readAll();
+            for(Card card : cards){
+                if(card.getDeckId() != deck.getId()){
+                    cards.remove(card);
+                }
+            }
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
+
+             */
+        try {
+            recyclerView.setAdapter(new CardRecyclerViewAdapter(activity.getCardDBHandler().getCardTable().readAll()));
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
         //}
 
         ImageButton dueDateButton = (ImageButton) view.findViewById(R.id.dueDateButton);
@@ -98,6 +120,11 @@ public class CardListFragment extends Fragment {
                 chooseDateAndTime(false, view);
             }
         });
+
+        EditText titleEditText = (EditText) view.findViewById(R.id.titleEditText);
+        titleEditText.setText(deck.getTitle());
+        TextView dueDateTextView = (TextView) view.findViewById(R.id.dueDateTextView);
+        dueDateTextView.setText(deck.getDueDate().toString());
 
         return view;
     }
