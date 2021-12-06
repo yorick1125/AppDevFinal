@@ -9,12 +9,13 @@ public class Card implements Identifiable<Long> {
     private Long id;
     private String front;
     private String back;
+    private Long deckId;
 
     public static List<Card> getDefaultCards(){
         List<Card> cards = new ArrayList<>();
-        cards.add(new Card(1L, "front", "back"));
-        cards.add(new Card(1L, "front", "back"));
-        cards.add(new Card(1L, "front", "back"));
+        cards.add(new Card(1L, "front", "back", 1L));
+        cards.add(new Card(1L, "front", "back", 1L));
+        cards.add(new Card(1L, "front", "back", 1L));
         return cards;
     }
 
@@ -23,10 +24,11 @@ public class Card implements Identifiable<Long> {
         this.front = "";
         this.back = "";
     }
-    public Card(Long id, String front, String back){
+    public Card(Long id, String front, String back, Long deckId){
         this.id = id;
         this.front = front;
         this.back = back;
+        this.deckId = deckId;
     }
 
     public Long getId(){
