@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+
+import com.example.flashcardapplication.model.Deck;
 import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
