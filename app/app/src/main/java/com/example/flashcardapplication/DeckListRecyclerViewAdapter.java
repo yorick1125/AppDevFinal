@@ -59,13 +59,6 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
                 return true;
             }
         });
-        holder.playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.findNavController(view)
-                        .navigate(R.id.action_homePageFragment_to_studyModeFragment);
-            }
-        });
     }
 
     @Override
@@ -92,8 +85,8 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
             playButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     activity.getDeckViewModel().setDeck(deck);
-                    activity.getDeckViewModel().notifyChange();
 
                     Navigation.findNavController(view)
                             .navigate(R.id.action_homePageFragment_to_studyModeFragment);

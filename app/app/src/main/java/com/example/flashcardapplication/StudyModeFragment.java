@@ -10,14 +10,20 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.flashcardapplication.databinding.FragmentStudyModeBinding;
+import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.model.Deck;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudyModeFragment extends Fragment {
 
     private FragmentStudyModeBinding binding;
     private Deck deck;
+    private Card currentCard;
     private MainActivity activity;
     private int index;
+    private List<Card> cards;
 
     @Override
     public View onCreateView(
@@ -37,7 +43,15 @@ public class StudyModeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.txtDeckTitle.setText(deck.getTitle());
-        //binding.cardFront.setText(deck.getCards().get(index).getFront());
+
+        if(index < deck.getCards().size())
+        {
+            cards = new ArrayList<Card>(deck.getCards());
+            currentCard = cards.get(index);
+            binding.cardFront.setText(currentCard.getFront());
+            index++;
+        }
+
         binding.layoutStudyResult.setVisibility(View.INVISIBLE);
         binding.layoutStudyAnswer.setVisibility(View.INVISIBLE);
 
@@ -74,6 +88,11 @@ public class StudyModeFragment extends Fragment {
                         .navigate(R.id.action_studyModeFragment_to_homePageFragment);
             }
         });
+    }
+
+    private void SetDataFields()
+    {
+
     }
 
     @Override

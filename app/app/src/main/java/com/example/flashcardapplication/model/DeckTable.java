@@ -70,11 +70,13 @@ public class DeckTable extends Table<Deck> {
         Deck deck2 = new Deck(2L, "science");
         deck2.setDueDate(new Date());
         List<Card> cardList = new ArrayList<>();
+        List<Card> cardList2 = new ArrayList<>();
         cardList.add(new Card(3L, "when did ww1 end?", "1918", 1L));
         cardList.add(new Card(3L, "when did ww2 end?", "1945", 1L));
-        cardList.add(new Card(3L, "another name for h20", "wata", 2L));
-        cardList.add(new Card(3L, "3 states of matter", "solid, liquid, gas", 2L));
+        cardList2.add(new Card(3L, "another name for h20", "wata", 2L));
+        cardList2.add(new Card(3L, "3 states of matter", "solid, liquid, gas", 2L));
         deck.setCards(cardList);
+        deck2.setCards(cardList2);
         try {
             database.insert(TABLE_NAME, null, toContentValues(deck));
             database.insert(TABLE_NAME, null, toContentValues(deck2));
