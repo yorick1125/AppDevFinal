@@ -10,17 +10,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 
-import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.model.Deck;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -76,7 +72,7 @@ public class HomePageFragment extends Fragment {
             recyclerView.setAdapter(new DeckListRecyclerViewAdapter(Deck.getDefaultDecks()));
         //}
 
-        FloatingActionButton fab = view.findViewById(R.id.addDeckFAB);
+        FloatingActionButton fab = view.findViewById(R.id.addCardFAB);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
