@@ -74,6 +74,7 @@ public class CardListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_card_list, container, false);
+        MainActivity activity = (MainActivity) getActivity();
         deck = new Deck();
         //binding = FragmentCardListBinding.inflate(inflater, container, false);
 
