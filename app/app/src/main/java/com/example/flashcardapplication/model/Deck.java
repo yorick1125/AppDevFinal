@@ -16,9 +16,9 @@ public class Deck implements Identifiable<Long> {
 
     public static List<Deck> getDefaultDecks(){
         List<Deck> cards = new ArrayList<>();
-        cards.add(new Deck().setTitle("title"));
-        cards.add(new Deck().setTitle("title"));
-        cards.add(new Deck().setTitle("title"));
+        cards.add(new Deck().setTitle("Deck 1"));
+        cards.add(new Deck().setTitle("Deck 2"));
+        cards.add(new Deck().setTitle("Deck 3"));
         return cards;
     }
 
