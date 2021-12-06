@@ -65,18 +65,6 @@ public class Card implements Identifiable<Long> {
         return this;
     }
 
-    public static void create(){
-
-    }
-    public static void read(int id){
-
-    }
-    public void update(int id, String front, String back){
-
-    }
-    public void delete(){
-
-    }
 
 
 }
