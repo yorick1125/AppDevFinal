@@ -10,17 +10,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 
-import com.example.flashcardapplication.model.Card;
-import com.example.flashcardapplication.model.Deck;
+import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -31,7 +27,7 @@ public class HomePageFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-
+    private MainActivity activity;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -62,6 +58,7 @@ public class HomePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_page_list, container, false);
+        activity = (MainActivity) getActivity();
 
         // Set the adapter
         //if (view instanceof RecyclerView) {
@@ -73,10 +70,15 @@ public class HomePageFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new DeckListRecyclerViewAdapter(Deck.getDefaultDecks()));
+        try {
+            recyclerView.setAdapter(new DeckListRecyclerViewAdapter(activity.getDeckDBHandler().getDeckTable().readAll(), activity));
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
+        ;
         //}
 
-        FloatingActionButton fab = view.findViewById(R.id.addDeckFAB);
+        FloatingActionButton fab = view.findViewById(R.id.addCardFAB);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
