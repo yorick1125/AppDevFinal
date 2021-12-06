@@ -84,12 +84,6 @@ public class Deck implements Identifiable<Long> {
         return this;
     }
 
-    public static void create(){
-
-    }
-    public static void read(int id){
-
-    }
 
     public List<Card> getCards() {
         return cards;
@@ -100,10 +94,4 @@ public class Deck implements Identifiable<Long> {
         return this;
     }
 
-    public void update(int id, String title){
-
-    }
-    public void delete(){
-
-    }
 }

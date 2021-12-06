@@ -1,5 +1,6 @@
 package com.example.flashcardapplication;
 
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -30,6 +32,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
     public DeckListRecyclerViewAdapter(List<Deck> items, Context context) {
         activity = (MainActivity) context;
         decks = items;
+        this.activity = activity;
     }
 
     @Override
@@ -45,8 +48,24 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
         holder.bind(decks.get(position));
 
         holder.deck = decks.get(position);
-        holder.nameTextView.setText(String.valueOf(decks.get(position).getId().intValue()));
-        holder.subjectTextView.setText(decks.get(position).getTitle());
+        holder.nameTextView.setText(String.valueOf(decks.get(position).getTitle()));
+        holder.subjectTextView.setText(decks.get(position).getSubject().toString());
+        holder.dueDateTextView.setText(decks.get(position).getDueDate().toString());
+        holder.deckItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
+                navController.navigate(R.id.action_homePageFragment_to_cardListFragment);
+                return true;
+            }
+        });
+        holder.playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view)
+                        .navigate(R.id.action_homePageFragment_to_studyModeFragment);
+            }
+        });
     }
 
     @Override
@@ -57,6 +76,8 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView nameTextView;
         public final TextView subjectTextView;
+        public final TextView dueDateTextView;
+        public final LinearLayout deckItemLayout;
         public final ImageButton playButton;
         public Deck deck;
 
@@ -64,7 +85,9 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
             super(binding.getRoot());
             nameTextView = binding.deckName;
             subjectTextView = binding.deckSubject;
+            dueDateTextView = binding.deckDueDate;
             playButton = binding.deckPlayButton;
+            deckItemLayout = binding.deckItemLayout;
 
             playButton.setOnClickListener(new View.OnClickListener() {
                 @Override

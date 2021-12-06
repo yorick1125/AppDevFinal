@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="21ca084d-45fb-45e4-8672-cc07c1d3ac19" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/AppDevFinal.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AppDevFinal.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/app/src/main/java/com/example/flashcardapplication/viewmodel/DeckViewModel.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/app/src/main/java/com/example/flashcardapplication/viewmodel/ObservableModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
@@ -75,7 +76,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
