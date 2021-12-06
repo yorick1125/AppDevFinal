@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.example.flashcardapplication.model.CardDBHandler;
 import com.example.flashcardapplication.model.DeckDBHandler;
+import com.example.flashcardapplication.viewmodel.DeckViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +32,17 @@ public class MainActivity extends AppCompatActivity {
         return deckDBHandler;
     }
     public CardDBHandler getCardDBHandler() { return cardDBHandler; }
+    private DeckViewModel deckViewModel;
+
+    public MainActivity()
+    {
+        deckViewModel = new DeckViewModel();
+    }
+
+    public DeckViewModel getDeckViewModel() {
+        return deckViewModel;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

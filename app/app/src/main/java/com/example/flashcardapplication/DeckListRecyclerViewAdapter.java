@@ -5,6 +5,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +29,8 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
     private MainActivity activity;
     private ViewGroup parent;
 
-    public DeckListRecyclerViewAdapter(List<Deck> items, MainActivity activity) {
+    public DeckListRecyclerViewAdapter(List<Deck> items, Context context) {
+        activity = (MainActivity) context;
         decks = items;
         this.activity = activity;
     }
@@ -42,6 +45,8 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        holder.bind(decks.get(position));
+
         holder.deck = decks.get(position);
         holder.nameTextView.setText(String.valueOf(decks.get(position).getTitle()));
         holder.subjectTextView.setText(decks.get(position).getSubject().toString());
@@ -83,6 +88,21 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
             dueDateTextView = binding.deckDueDate;
             playButton = binding.deckPlayButton;
             deckItemLayout = binding.deckItemLayout;
+
+            playButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.getDeckViewModel().setDeck(deck);
+                    activity.getDeckViewModel().notifyChange();
+
+                    Navigation.findNavController(view)
+                            .navigate(R.id.action_homePageFragment_to_studyModeFragment);
+                }
+            });
+        }
+
+        public void bind(Deck deck) {
+            this.deck = deck;
         }
 
         @Override

@@ -76,6 +76,7 @@ public class HomePageFragment extends Fragment {
             e.printStackTrace();
         }
         ;
+            recyclerView.setAdapter(new DeckListRecyclerViewAdapter(Deck.getDefaultDecks(), getContext()));
         //}
 
         FloatingActionButton fab = view.findViewById(R.id.addCardFAB);
