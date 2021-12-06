@@ -73,7 +73,7 @@ public class HomePageFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new DeckListRecyclerViewAdapter(Deck.getDefaultDecks()));
+            recyclerView.setAdapter(new DeckListRecyclerViewAdapter(Deck.getDefaultDecks(), getContext()));
         //}
 
         FloatingActionButton fab = view.findViewById(R.id.addDeckFAB);
