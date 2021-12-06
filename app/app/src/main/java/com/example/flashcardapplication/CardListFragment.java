@@ -57,6 +57,7 @@ public class CardListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_card_list, container, false);
+        MainActivity activity = (MainActivity) getActivity();
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -69,6 +70,7 @@ public class CardListFragment extends Fragment {
             }
             recyclerView.setAdapter(new CardRecyclerViewAdapter(Card.getDefaultCards()));
         }
+
         return view;
     }
 }
