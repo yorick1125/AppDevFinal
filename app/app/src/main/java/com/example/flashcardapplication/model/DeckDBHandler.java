@@ -12,7 +12,7 @@ public class DeckDBHandler extends SQLiteOpenHelper {
 
 
     public static final String DATABASE_FILE_NAME = "data.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 1;
 
     private Table<Deck> deckTable;
 
@@ -33,7 +33,13 @@ public class DeckDBHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, int i, int i1) {
         // to do im not sure what goes here
-        //database.execSQL("DROP TABLE IF EXISTS " + deckTable.getName());
-        //onCreate(database);
+        database.execSQL("DROP TABLE IF EXISTS " + deckTable.getName());
+        onCreate(database);
+    }
+    @Override
+    public void onDowngrade(SQLiteDatabase database, int i, int i1) {
+        // not sure what needs to go in here
+        database.execSQL("DROP TABLE IF EXISTS " + deckTable.getName());
+        onCreate(database);
     }
 }
