@@ -1,9 +1,15 @@
 package com.example.flashcardapplication;
 
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.content.Context;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,8 +23,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import android.widget.TextView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +47,7 @@ public class EditCardFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private boolean isFront;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -74,6 +87,7 @@ public class EditCardFragment extends Fragment {
     }
 
     @Override
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_card, container, false);
         selectedImage = view.findViewById(R.id.cardImageView);
@@ -91,7 +105,48 @@ public class EditCardFragment extends Fragment {
             public void onClick(View view) {
                 Toast.makeText( getContext(), "Gallery Button is Clicked",Toast.LENGTH_SHORT).show();
             }
-        });
+        }); 
+        //Animation
+        Context applicationContext = getActivity().getApplicationContext();
+        float scale = applicationContext.getResources().getDisplayMetrics().density;
+        TextView front = view.findViewById(R.id.card_front);
+        TextView back = view.findViewById(R.id.card_back);
+        isFront = true;
+        if(front != null){
+            front.setCameraDistance(8000 * scale);
+        }
+        if(back != null) {
+            back.setCameraDistance(8000 * scale);
+        }
+
+        AnimatorSet frontAnimation = (AnimatorSet) AnimatorInflater.loadAnimator(applicationContext, R.animator.front_animator);
+        AnimatorSet backAnimation = (AnimatorSet) AnimatorInflater.loadAnimator(applicationContext, R.animator.back_animator);
+
+        View.OnClickListener startAnimation = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isFront)
+                {
+                    frontAnimation.setTarget(front);
+                    backAnimation.setTarget(back);
+                    frontAnimation.start();
+                    backAnimation.start();
+                    isFront = false;
+
+                }
+                else
+                {
+                    frontAnimation.setTarget(back);
+                    backAnimation.setTarget(front);
+                    backAnimation.start();
+                    frontAnimation.start();
+                    isFront = true;
+
+                }
+            }
+        };
+        front.setOnClickListener(startAnimation);
+        back.setOnClickListener(startAnimation);
         return view;
     }
 
@@ -126,5 +181,6 @@ public class EditCardFragment extends Fragment {
             Bitmap image = (Bitmap) data.getExtras().get("data");
             selectedImage.setImageBitmap(image);
         }
+
     }
 }

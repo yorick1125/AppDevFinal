@@ -13,9 +13,9 @@ public class Card implements Identifiable<Long> {
 
     public static List<Card> getDefaultCards(){
         List<Card> cards = new ArrayList<>();
-        cards.add(new Card(1L, "front", "back", 1L));
-        cards.add(new Card(1L, "front", "back", 1L));
-        cards.add(new Card(1L, "front", "back", 1L));
+        cards.add(new Card("front", "back", 1L));
+        cards.add(new Card("front", "back", 1L));
+        cards.add(new Card("front", "back", 1L));
         return cards;
     }
 
@@ -24,7 +24,7 @@ public class Card implements Identifiable<Long> {
         this.front = "";
         this.back = "";
     }
-    public Card(Long id, String front, String back, Long deckId){
+    public Card(String front, String back, Long deckId){
         this.id = id;
         this.front = front;
         this.back = back;
@@ -66,6 +66,15 @@ public class Card implements Identifiable<Long> {
         this.back = back;
         return this;
     }
+
+    public Long getDeckId(){
+        return deckId;
+    }
+    public Card setDeckId(Long deckId){
+        this.deckId = deckId;
+        return this;
+    }
+
 
 
 
