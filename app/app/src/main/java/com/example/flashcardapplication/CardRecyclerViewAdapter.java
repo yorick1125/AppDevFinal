@@ -1,10 +1,14 @@
 package com.example.flashcardapplication;
 
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.flashcardapplication.model.Card;
@@ -19,8 +23,10 @@ import java.util.List;
 public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerViewAdapter.ViewHolder> {
 
     private final List<Card> cards;
+    private MainActivity activity;
 
-    public CardRecyclerViewAdapter(List<Card> items) {
+    public CardRecyclerViewAdapter(List<Card> items, Context context) {
+        activity = (MainActivity) context;
         cards = items;
     }
 
@@ -46,11 +52,25 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerVi
         public final TextView question;
         public final TextView answer;
         public Card card;
+        public final LinearLayout cardItemLayout;
 
         public ViewHolder(FragmentCardListItemBinding binding) {
             super(binding.getRoot());
             question = binding.cardQuestion;
             answer = binding.cardAnswer;
+            cardItemLayout = binding.cardItemLayout;
+
+            cardItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    activity.getCardViewModel().setCard(card);
+                    activity.getDeckViewModel().notifyChange();
+
+                    NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
+                    navController.navigate(R.id.action_cardListFragment_to_editCardFragment);
+                    return true;
+                }
+            });
         }
 
         @Override

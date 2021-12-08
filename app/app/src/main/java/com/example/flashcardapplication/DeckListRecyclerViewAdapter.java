@@ -32,7 +32,6 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
     public DeckListRecyclerViewAdapter(List<Deck> items, Context context) {
         activity = (MainActivity) context;
         decks = items;
-        this.activity = activity;
     }
 
     @Override

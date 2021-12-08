@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.example.flashcardapplication.model.CardDBHandler;
 import com.example.flashcardapplication.model.DeckDBHandler;
+import com.example.flashcardapplication.viewmodel.CardViewModel;
 import com.example.flashcardapplication.viewmodel.DeckViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 
+import androidx.cardview.widget.CardView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public CardDBHandler getCardDBHandler() { return cardDBHandler; }
     private DeckViewModel deckViewModel;
+    private CardViewModel cardViewModel;
     private AnimatorSet frontAnimation;
     private AnimatorSet backAnimation;
 
@@ -48,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
     public DeckViewModel getDeckViewModel() {
         return deckViewModel;
+    }
+    public CardViewModel getCardViewModel() {
+        return cardViewModel;
     }
 
 
