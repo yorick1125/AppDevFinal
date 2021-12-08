@@ -24,10 +24,16 @@ import com.example.flashcardapplication.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+
+import android.widget.ImageView;
+
 import android.widget.TextView;
+
 import android.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
+
+
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
