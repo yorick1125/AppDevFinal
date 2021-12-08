@@ -15,10 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
+import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.model.Deck;
 import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -73,7 +75,22 @@ public class HomePageFragment extends Fragment {
             }
 
         try {
-            recyclerView.setAdapter(new DeckListRecyclerViewAdapter(activity.getDeckDBHandler().getDeckTable().readAll(), activity));
+            List<Deck> decks = activity.getDeckDBHandler().getDeckTable().readAll();
+            List<Card> cards = activity.getCardDBHandler().getCardTable().readAll();
+
+            for(int i = 0; i < decks.size(); i++)
+            {
+                for(int j = 0; j < cards.size(); j++)
+                {
+                    if(cards.get(j).getDeckId() == decks.get(i).getId())
+                    {
+                        decks.get(i).getCards().add(cards.get(j));
+                    }
+                }
+            }
+
+
+            recyclerView.setAdapter(new DeckListRecyclerViewAdapter(decks, activity));
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
