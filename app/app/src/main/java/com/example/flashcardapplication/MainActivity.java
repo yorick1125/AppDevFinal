@@ -97,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
 
         deckDBHandler = new DeckDBHandler(this);
         cardDBHandler = new CardDBHandler(this);
+        deckViewModel = new DeckViewModel();
+        cardViewModel = new CardViewModel();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

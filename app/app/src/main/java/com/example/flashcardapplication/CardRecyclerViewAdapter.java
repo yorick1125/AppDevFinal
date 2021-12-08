@@ -41,6 +41,17 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerVi
         holder.card = cards.get(position);
         holder.question.setText(cards.get(position).getFront());
         holder.answer.setText(cards.get(position).getBack());
+        holder.cardItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                activity.getCardViewModel().setCard(holder.card);
+                activity.getCardViewModel().notifyChange();
+
+                NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
+                navController.navigate(R.id.action_cardListFragment_to_editCardFragment);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -60,17 +71,7 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerVi
             answer = binding.cardAnswer;
             cardItemLayout = binding.cardItemLayout;
 
-            cardItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    activity.getCardViewModel().setCard(card);
-                    activity.getDeckViewModel().notifyChange();
 
-                    NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
-                    navController.navigate(R.id.action_cardListFragment_to_editCardFragment);
-                    return true;
-                }
-            });
         }
 
         @Override

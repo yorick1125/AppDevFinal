@@ -54,6 +54,9 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
         holder.deckItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                activity.getDeckViewModel().setDeck(holder.deck);
+                activity.getDeckViewModel().notifyChange();
+
                 NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
                 navController.navigate(R.id.action_homePageFragment_to_cardListFragment);
                 return true;
@@ -93,17 +96,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
                 }
             });
 
-            deckItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    activity.getDeckViewModel().setDeck(deck);
-                    activity.getDeckViewModel().notifyChange();
 
-                    NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
-                    navController.navigate(R.id.action_homePageFragment_to_cardListFragment);
-                    return true;
-                }
-            });
         }
 
         public void bind(Deck deck) {

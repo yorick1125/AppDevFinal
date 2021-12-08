@@ -24,10 +24,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import android.widget.TextView;
+
+import com.example.flashcardapplication.model.Card;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,6 +51,8 @@ public class EditCardFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private boolean isFront;
+    private Card card;
+    private MainActivity activity;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -90,10 +95,12 @@ public class EditCardFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_card, container, false);
+        activity = (MainActivity) getActivity();
+        card = activity.getCardViewModel().getCard();
+
         selectedImage = view.findViewById(R.id.cardImageView);
         cameraBtn = view.findViewById(R.id.cameraBtn);
         galleryBtn = view.findViewById(R.id.galleryBtn);
-
         cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,48 +112,18 @@ public class EditCardFragment extends Fragment {
             public void onClick(View view) {
                 Toast.makeText( getContext(), "Gallery Button is Clicked",Toast.LENGTH_SHORT).show();
             }
-        }); 
-        //Animation
-        Context applicationContext = getActivity().getApplicationContext();
-        float scale = applicationContext.getResources().getDisplayMetrics().density;
-        TextView front = view.findViewById(R.id.card_front);
-        TextView back = view.findViewById(R.id.card_back);
-        isFront = true;
-        if(front != null){
-            front.setCameraDistance(8000 * scale);
-        }
-        if(back != null) {
-            back.setCameraDistance(8000 * scale);
-        }
+        });
+        setupCardFlip(view);
 
-        AnimatorSet frontAnimation = (AnimatorSet) AnimatorInflater.loadAnimator(applicationContext, R.animator.front_animator);
-        AnimatorSet backAnimation = (AnimatorSet) AnimatorInflater.loadAnimator(applicationContext, R.animator.back_animator);
+        EditText editTextQuestion = (EditText) view.findViewById(R.id.editTextQuestion);
+        EditText editTextAnswer = (EditText) view.findViewById(R.id.editTextAnswer);
+        TextView cardFront = (TextView) view.findViewById(R.id.card_front);
+        TextView cardBack = (TextView) view.findViewById(R.id.card_back);
+        cardFront.setText(card.getFront());
+        cardBack.setText(card.getBack());
+        editTextQuestion.setText(card.getFront());
+        editTextAnswer.setText(card.getBack());
 
-        View.OnClickListener startAnimation = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isFront)
-                {
-                    frontAnimation.setTarget(front);
-                    backAnimation.setTarget(back);
-                    frontAnimation.start();
-                    backAnimation.start();
-                    isFront = false;
-
-                }
-                else
-                {
-                    frontAnimation.setTarget(back);
-                    backAnimation.setTarget(front);
-                    backAnimation.start();
-                    frontAnimation.start();
-                    isFront = true;
-
-                }
-            }
-        };
-        front.setOnClickListener(startAnimation);
-        back.setOnClickListener(startAnimation);
         return view;
     }
 
@@ -182,5 +159,46 @@ public class EditCardFragment extends Fragment {
             selectedImage.setImageBitmap(image);
         }
 
+    }
+    public void setupCardFlip(View view){
+        Context applicationContext = getActivity().getApplicationContext();
+        float scale = applicationContext.getResources().getDisplayMetrics().density;
+        TextView front = view.findViewById(R.id.card_front);
+        TextView back = view.findViewById(R.id.card_back);
+        if(front != null){
+            front.setCameraDistance(8000 * scale);
+        }
+        if(back != null) {
+            back.setCameraDistance(8000 * scale);
+        }
+
+        AnimatorSet frontAnimation = (AnimatorSet) AnimatorInflater.loadAnimator(applicationContext, R.animator.front_animator);
+        AnimatorSet backAnimation = (AnimatorSet) AnimatorInflater.loadAnimator(applicationContext, R.animator.back_animator);
+
+        View.OnClickListener startAnimation = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isFront)
+                {
+                    frontAnimation.setTarget(front);
+                    backAnimation.setTarget(back);
+                    frontAnimation.start();
+                    backAnimation.start();
+                    isFront = false;
+
+                }
+                else
+                {
+                    frontAnimation.setTarget(back);
+                    backAnimation.setTarget(front);
+                    backAnimation.start();
+                    frontAnimation.start();
+                    isFront = true;
+
+                }
+            }
+        };
+        front.setOnClickListener(startAnimation);
+        back.setOnClickListener(startAnimation);
     }
 }

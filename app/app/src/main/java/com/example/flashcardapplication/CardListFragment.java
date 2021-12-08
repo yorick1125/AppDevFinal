@@ -31,7 +31,6 @@ import android.widget.Toast;
 import com.example.flashcardapplication.databinding.FragmentCardListBinding;
 import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.model.Deck;
-import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.example.flashcardapplication.utils.DatePickerDialogFragment;
 import com.example.flashcardapplication.utils.TimePickerDialogFragment;
 import com.example.flashcardapplication.viewmodel.DeckViewModel;
@@ -39,10 +38,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -58,7 +55,7 @@ public class CardListFragment extends Fragment {
     private FragmentCardListBinding binding;
 
     private static int currentTaskNotificationId = 0;
-    private MainActivity mainActivity;
+    private MainActivity activity;
     private static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
 
 
@@ -135,7 +132,7 @@ public class CardListFragment extends Fragment {
                 chooseDateAndTime(false, view);
             }
         });
-        FloatingActionButton fab = view.findViewById(R.id.addCardFAB);
+        FloatingActionButton fab = view.findViewById(R.id.addCardFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,16 +141,20 @@ public class CardListFragment extends Fragment {
             }
         });
 
+        EditText titleEditText = (EditText) view.findViewById(R.id.titleEditText);
+        titleEditText.setText(deck.getTitle());
+        TextView dueDateTextView = (TextView) view.findViewById(R.id.dueDateTextView);
+        dueDateTextView.setText(deck.getDueDate().toString());
 
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(mainActivity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_EDIT)
-                    mainActivity.getDeckViewModel().setState(DeckViewModel.State.EDITED);
+                if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_EDIT)
+                    activity.getDeckViewModel().setState(DeckViewModel.State.EDITED);
                 else
-                    mainActivity.getDeckViewModel().setState(DeckViewModel.State.CREATED);
-                mainActivity.getDeckViewModel().setUpdatedDeck(deck);
-                mainActivity.getDeckViewModel().notifyChange();
+                    activity.getDeckViewModel().setState(DeckViewModel.State.CREATED);
+                activity.getDeckViewModel().setUpdatedDeck(deck);
+                activity.getDeckViewModel().notifyChange();
                 NavController controller = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
                 controller.popBackStack();
 
@@ -179,10 +180,8 @@ public class CardListFragment extends Fragment {
             }
         });
 
-        EditText titleEditText = (EditText) view.findViewById(R.id.titleEditText);
-        titleEditText.setText(deck.getTitle());
-        TextView dueDateTextView = (TextView) view.findViewById(R.id.dueDateTextView);
-        dueDateTextView.setText(deck.getDueDate().toString());
+
+
 
 
         return view;
@@ -191,14 +190,14 @@ public class CardListFragment extends Fragment {
     private void overdueNotification(){
 
         // setting intent
-        Intent intent = new Intent( mainActivity, MainActivity.class);
+        Intent intent = new Intent(activity, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra("Task Id", deck.getId());
-        PendingIntent pendingIntent = PendingIntent.getActivity(mainActivity,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(activity,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         // making the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mainActivity, MainActivity.DECK_OVERDUE_NOTIFICATION_CHANNEL)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(activity, MainActivity.DECK_OVERDUE_NOTIFICATION_CHANNEL)
                 .setSmallIcon(R.drawable.ic_baseline_priority_high_24)
                 .setContentTitle(deck.getTitle())
                 .setContentText("The due date for your deck has passed. How did your test go?")
@@ -207,7 +206,7 @@ public class CardListFragment extends Fragment {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mainActivity);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(activity);
 
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(currentTaskNotificationId++, builder.build());
@@ -216,14 +215,14 @@ public class CardListFragment extends Fragment {
     private void dayBeforeNotification(){
 
         // setting intent
-        Intent intent = new Intent(mainActivity, MainActivity.class);
+        Intent intent = new Intent(activity, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra("Task Id", deck.getId());
-        PendingIntent pendingIntent = PendingIntent.getActivity(mainActivity,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(activity,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         // making the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder( mainActivity, MainActivity.DECK_DUE_IN_DAY_NOTIFICATION_CHANNEL)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder( activity, MainActivity.DECK_DUE_IN_DAY_NOTIFICATION_CHANNEL)
                 .setSmallIcon(R.drawable.ic_baseline_priority_high_24)
                 .setContentTitle(deck.getTitle())
                 .setContentText("Your test for this deck is tomorrow! Why aren't you studying?")
@@ -232,7 +231,7 @@ public class CardListFragment extends Fragment {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mainActivity);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(activity);
 
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(currentTaskNotificationId++, builder.build());

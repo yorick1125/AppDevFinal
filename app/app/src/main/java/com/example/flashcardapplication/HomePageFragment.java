@@ -96,10 +96,11 @@ public class HomePageFragment extends Fragment {
         }
         //}
 
-        FloatingActionButton fab = view.findViewById(R.id.addCardFAB);
+        FloatingActionButton fab = view.findViewById(R.id.addDeckFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
                 navController.navigate(R.id.action_homePageFragment_to_cardListFragment);
             }
