@@ -50,7 +50,15 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
         holder.nameTextView.setText(String.valueOf(decks.get(position).getTitle()));
         holder.subjectTextView.setText(decks.get(position).getSubject().toString());
         holder.dueDateTextView.setText(decks.get(position).getDueDate().toString());
-
+        
+        holder.deckItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
+                navController.navigate(R.id.action_homePageFragment_to_cardListFragment);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -77,8 +85,8 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
             playButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     activity.getDeckViewModel().setDeck(deck);
-                    activity.getDeckViewModel().notifyChange();
 
                     Navigation.findNavController(view)
                             .navigate(R.id.action_homePageFragment_to_studyModeFragment);

@@ -1,8 +1,12 @@
 package com.example.flashcardapplication;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.icu.number.Scale;
+
 import android.os.Bundle;
 
 import com.example.flashcardapplication.model.CardDBHandler;
@@ -26,10 +30,19 @@ import com.example.flashcardapplication.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+
+import android.widget.ImageView;
+
 import android.widget.TextView;
+
 import android.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
+
+
+    public static String DECK_OVERDUE_NOTIFICATION_CHANNEL = "deck-overdue-notification-channel";
+    public static String DECK_DUE_IN_DAY_NOTIFICATION_CHANNEL = "deck-due-in-day-notification-channel";
+
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -60,6 +73,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //create Notification Channel
+        String name1 = "Decks Overdue";
+        String name2 = "Decks Due In A Day";
+        String description1 = "Notifications about decks overdue";
+        String description2 = "Notifications about decks due in a day";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+        NotificationChannel channelOverdue = new NotificationChannel(DECK_OVERDUE_NOTIFICATION_CHANNEL, name1, importance);
+        channelOverdue.setDescription(description1);
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        NotificationManager notificationManagerOverdue = getSystemService(NotificationManager.class);
+        notificationManagerOverdue.createNotificationChannel(channelOverdue);
+
+        NotificationChannel channelDueInDay = new NotificationChannel(DECK_DUE_IN_DAY_NOTIFICATION_CHANNEL, name2, importance);
+        channelDueInDay.setDescription(description2);
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        NotificationManager notificationManagerDueInDay = getSystemService(NotificationManager.class);
+        notificationManagerDueInDay.createNotificationChannel(channelDueInDay);
+
         deckDBHandler = new DeckDBHandler(this);
         cardDBHandler = new CardDBHandler(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());

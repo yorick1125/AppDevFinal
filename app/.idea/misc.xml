@@ -16,9 +16,19 @@
         <entry key="..\:/Users/micha/Desktop/GitHub/AppDevFinal/AppDevFinal/app/app/src/main/res/layout/fragment_home_page.xml" value="0.20104166666666667" />
         <entry key="..\:/Users/micha/Desktop/GitHub/AppDevFinal/AppDevFinal/app/app/src/main/res/layout/fragment_home_page_list.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/micha/Desktop/GitHub/AppDevFinal/AppDevFinal/app/app/src/main/res/layout/fragment_study_mode.xml" value="0.2694746376811594" />
-        <entry key="app/src/main/res/layout/fragment_card_list.xml" value="0.12436676798378926" />
-        <entry key="app/src/main/res/layout/fragment_edit_card.xml" value="0.12436676798378926" />
-        <entry key="app/src/main/res/layout/fragment_home_page_list.xml" value="0.12436676798378926" />
+
+
+        <entry key="app/src/main/res/drawable/ic_baseline_priority_high_24.xml" value="0.2015625" />
+
+        <entry key="..\:/Users/vathu/OneDrive/Documents/GitHub/AppDevFinal/app/app/src/main/res/layout/activity_main.xml" value="0.34556159420289856" />
+        <entry key="..\:/Users/vathu/OneDrive/Documents/GitHub/AppDevFinal/app/app/src/main/res/layout/content_main.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/vathu/OneDrive/Documents/GitHub/AppDevFinal/app/app/src/main/res/layout/fragment_card_list.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/vathu/OneDrive/Documents/GitHub/AppDevFinal/app/app/src/main/res/layout/fragment_card_list_item.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/vathu/OneDrive/Documents/GitHub/AppDevFinal/app/app/src/main/res/layout/fragment_edit_card.xml" value="0.33" />
+        <entry key="..\:/Users/vathu/OneDrive/Documents/GitHub/AppDevFinal/app/app/src/main/res/layout/fragment_home_page.xml" value="0.34556159420289856" />
+        <entry key="..\:/Users/vathu/OneDrive/Documents/GitHub/AppDevFinal/app/app/src/main/res/layout/fragment_home_page_list.xml" value="0.33" />
+        <entry key="..\:/Users/vathu/OneDrive/Documents/GitHub/AppDevFinal/app/app/src/main/res/layout/fragment_study_mode.xml" value="0.38697916666666665" />
+
       </map>
     </option>
   </component>
