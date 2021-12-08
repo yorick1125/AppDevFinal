@@ -65,15 +65,15 @@ public class DeckTable extends Table<Deck> {
     @Override
     public void initialize(SQLiteDatabase database) {
         // to do this is just placeholder code
-        Deck deck = new Deck(1L, "history");
+        Deck deck = new Deck("history");
         deck.setDueDate(new Date());
-        Deck deck2 = new Deck(2L, "science");
+        Deck deck2 = new Deck("science");
         deck2.setDueDate(new Date());
         List<Card> cardList = new ArrayList<>();
-        cardList.add(new Card(3L, "when did ww1 end?", "1918", 1L));
-        cardList.add(new Card(3L, "when did ww2 end?", "1945", 1L));
-        cardList.add(new Card(3L, "another name for h20", "wata", 2L));
-        cardList.add(new Card(3L, "3 states of matter", "solid, liquid, gas", 2L));
+        cardList.add(new Card("when did ww1 end?", "1918", 1L));
+        cardList.add(new Card("when did ww2 end?", "1945", 1L));
+        cardList.add(new Card("another name for h20", "wata", 2L));
+        cardList.add(new Card("3 states of matter", "solid, liquid, gas", 2L));
         deck.setCards(cardList);
         try {
             database.insert(TABLE_NAME, null, toContentValues(deck));

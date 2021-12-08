@@ -8,68 +8,41 @@
     tools:context=".EditCardFragment">
 
     <TextView
-        android:id="@+id/TitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Deck Title"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/deckTitleTextView"
-        app:layout_constraintHorizontal_bias="0.408"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/questionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
         android:text="Question"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/editTextTextPersonName2"
-        app:layout_constraintHorizontal_bias="0.542"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TitleTextView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/answerTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="50dp"
+
         android:text="Answer"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/editTextTextPersonName3"
-        app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="184dp" />
-    <Button
-        android:id="@+id/editCardButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit Card"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.52"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
 
-    <Button
-        android:id="@+id/deleteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editCardButton"
-        app:layout_constraintVertical_bias="0.105" />
+        app:layout_constraintTop_toBottomOf="@+id/questionTextView" /><![CDATA[
+
+
+        tools:layout_editor_absoluteY="184dp" />
+
+    ]]>
 
     <EditText
-        android:id="@+id/editTextTextPersonName2"
+        android:id="@+id/editTextQuestion"
         android:layout_width="209dp"
         android:layout_height="41dp"
-        android:layout_marginTop="112dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
@@ -77,28 +50,134 @@
         tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName3"
+        android:id="@+id/editTextAnswer"
         android:layout_width="209dp"
         android:layout_height="41dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
         android:ems="10"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2"
-        app:layout_constraintVertical_bias="0.048"
+        app:layout_constraintTop_toBottomOf="@+id/editTextQuestion"
         tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
     <TextView
-        android:id="@+id/deckTitleTextView"
+        android:id="@+id/imageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="76dp"
-        android:text="Example Title"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="50dp"
+        android:text="Image"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/answerTextView" />
+
+    <Button
+        android:id="@+id/cameraBtn"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="5dp"
+        android:backgroundTint="#555555"
+        android:text="Camera"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/galleryBtn"
+        app:layout_constraintTop_toBottomOf="@+id/editTextAnswer" />
+
+    <Button
+        android:id="@+id/galleryBtn"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="40dp"
+        android:backgroundTint="#555555"
+        android:text="Gallery"
+        android:textAlignment="center"
+        android:textSize="10dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextAnswer" />
+
+    <ImageView
+        android:id="@+id/cardImageView"
+        android:layout_width="90dp"
+        android:layout_height="68dp"
+        android:layout_marginBottom="244dp"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintBottom_toTopOf="@+id/editCardBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.704"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--Add a textview for back part of the card-->
+
+    <!--Add a Button that will apply flip on the card-->
+    <TextView
+        android:id="@+id/card_back"
+        android:layout_width="226dp"
+        android:layout_height="148dp"
+        android:background="#BF3030"
+        android:gravity="center"
+        android:text="Back Card"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.506" />
+        app:layout_constraintVertical_bias="0.615" />
+
+    <TextView
+        android:id="@+id/card_front"
+        android:layout_width="226dp"
+        android:layout_height="148dp"
+        android:background="#326314"
+        android:gravity="center"
+        android:text="Front Card"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.615" />
+
+    <Button
+        android:id="@+id/flip_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="380dp"
+        android:text="Flip Me"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.462"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/editCardBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Edit Card"
+        app:layout_constraintBottom_toTopOf="@+id/deleteBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/deleteBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="Delete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

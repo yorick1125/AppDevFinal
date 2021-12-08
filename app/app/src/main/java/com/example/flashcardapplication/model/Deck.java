@@ -27,13 +27,12 @@ public class Deck implements Identifiable<Long> {
         this.title = "";
     }
 
-    public Deck(Long id, String title){
-        this.id = id;
+    public Deck(String title){
+
         this.title = title;
     }
 
-    public Deck(Long id, String title, List<Card> cards, Date dueDate, Subjects subject){
-        this.id = id;
+    public Deck(String title, List<Card> cards, Date dueDate, Subjects subject){
         this.title = title;
         this.cards = cards;
         this.dueDate = dueDate;
