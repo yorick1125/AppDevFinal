@@ -1,10 +1,15 @@
 package com.example.flashcardapplication;
 
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -29,7 +34,9 @@ import com.example.flashcardapplication.model.Deck;
 import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.example.flashcardapplication.utils.DatePickerDialogFragment;
 import com.example.flashcardapplication.utils.TimePickerDialogFragment;
+import com.example.flashcardapplication.viewmodel.DeckViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,7 +56,11 @@ public class CardListFragment extends Fragment {
 
     private Deck deck;
     private FragmentCardListBinding binding;
-    private MainActivity activity;
+
+    private static int currentTaskNotificationId = 0;
+    private MainActivity mainActivity;
+    private static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -133,13 +144,100 @@ public class CardListFragment extends Fragment {
             }
         });
 
+
+        getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if(mainActivity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_EDIT)
+                    mainActivity.getDeckViewModel().setState(DeckViewModel.State.EDITED);
+                else
+                    mainActivity.getDeckViewModel().setState(DeckViewModel.State.CREATED);
+                mainActivity.getDeckViewModel().setUpdatedDeck(deck);
+                mainActivity.getDeckViewModel().notifyChange();
+                NavController controller = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
+                controller.popBackStack();
+
+                // check if due date is past current date and check if it is null
+                if( deck.getDueDate() != null && deck.getDueDate().getTime() > new Date().getTime()){
+                    // override run so it does the notification once its past the due date
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(deck.getDueDate().getTime() - (new Date().getTime() - MILLIS_IN_A_DAY));
+                                dayBeforeNotification();
+                                Thread.sleep(deck.getDueDate().getTime() - new Date().getTime());
+                                overdueNotification();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    thread.start();
+                }
+
+            }
+        });
+
         EditText titleEditText = (EditText) view.findViewById(R.id.titleEditText);
         titleEditText.setText(deck.getTitle());
         TextView dueDateTextView = (TextView) view.findViewById(R.id.dueDateTextView);
         dueDateTextView.setText(deck.getDueDate().toString());
 
+
         return view;
     }
+
+    private void overdueNotification(){
+
+        // setting intent
+        Intent intent = new Intent( mainActivity, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("Task Id", deck.getId());
+        PendingIntent pendingIntent = PendingIntent.getActivity(mainActivity,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        // making the notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mainActivity, MainActivity.DECK_OVERDUE_NOTIFICATION_CHANNEL)
+                .setSmallIcon(R.drawable.ic_baseline_priority_high_24)
+                .setContentTitle(deck.getTitle())
+                .setContentText("The due date for your deck has passed. How did your test go?")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                // Set the intent that will fire when the user taps the notification
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mainActivity);
+
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(currentTaskNotificationId++, builder.build());
+    }
+
+    private void dayBeforeNotification(){
+
+        // setting intent
+        Intent intent = new Intent(mainActivity, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("Task Id", deck.getId());
+        PendingIntent pendingIntent = PendingIntent.getActivity(mainActivity,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        // making the notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder( mainActivity, MainActivity.DECK_DUE_IN_DAY_NOTIFICATION_CHANNEL)
+                .setSmallIcon(R.drawable.ic_baseline_priority_high_24)
+                .setContentTitle(deck.getTitle())
+                .setContentText("Your test for this deck is tomorrow! Why aren't you studying?")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                // Set the intent that will fire when the user taps the notification
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mainActivity);
+
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(currentTaskNotificationId++, builder.build());
+    }
+
     private void chooseDateAndTime(boolean istrue, View view){
 
         // default date and time
