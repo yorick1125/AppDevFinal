@@ -65,9 +65,9 @@ public class DeckTable extends Table<Deck> {
     @Override
     public void initialize(SQLiteDatabase database) {
         // to do this is just placeholder code
-        Deck deck = new Deck(1L, "history");
+        Deck deck = new Deck("history");
         deck.setDueDate(new Date());
-        Deck deck2 = new Deck(2L, "science");
+        Deck deck2 = new Deck("science");
         deck2.setDueDate(new Date());
         List<Card> cardList = new ArrayList<>();
         List<Card> cardList2 = new ArrayList<>();
