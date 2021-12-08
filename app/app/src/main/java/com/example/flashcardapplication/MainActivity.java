@@ -2,6 +2,11 @@ package com.example.flashcardapplication;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.icu.number.Scale;
+
 import android.os.Bundle;
 
 import com.example.flashcardapplication.model.CardDBHandler;
@@ -22,12 +27,20 @@ import com.example.flashcardapplication.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+
+import android.widget.ImageView;
+
+import android.widget.TextView;
+
 import android.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
 
+
     public static String DECK_OVERDUE_NOTIFICATION_CHANNEL = "deck-overdue-notification-channel";
     public static String DECK_DUE_IN_DAY_NOTIFICATION_CHANNEL = "deck-due-in-day-notification-channel";
+
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -38,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     }
     public CardDBHandler getCardDBHandler() { return cardDBHandler; }
     private DeckViewModel deckViewModel;
+    private AnimatorSet frontAnimation;
+    private AnimatorSet backAnimation;
 
     public MainActivity()
     {
@@ -78,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         cardDBHandler = new CardDBHandler(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
 
         setSupportActionBar(binding.toolbar);
 

@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homePageFragment">
+    app:startDestination="@id/editCardFragment">
 
     <fragment
         android:id="@+id/editCardFragment"
         android:name="com.example.flashcardapplication.EditCardFragment"
         android:label="Edit Card"
-        tools:layout="@layout/fragment_edit_card" >
+        tools:layout="@layout/fragment_edit_card">
         <action
             android:id="@+id/action_editCardFragment_to_cardListFragment"
             app:destination="@id/cardListFragment" />
@@ -42,7 +42,7 @@
         android:id="@+id/studyModeFragment"
         android:name="com.example.flashcardapplication.StudyModeFragment"
         android:label="fragment_study_mode"
-        tools:layout="@layout/fragment_study_mode" >
+        tools:layout="@layout/fragment_study_mode">
         <action
             android:id="@+id/action_studyModeFragment_to_homePageFragment"
             app:destination="@id/homePageFragment" />
