@@ -103,14 +103,15 @@ public class CardListFragment extends Fragment {
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
-
              */
+
         try {
             recyclerView.setAdapter(new CardRecyclerViewAdapter(activity.getCardDBHandler().getCardTable().readAll()));
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
-        //}
+
+        //recyclerView.setAdapter(new CardRecyclerViewAdapter(Card.getDefaultCards()));
 
         ImageButton dueDateButton = (ImageButton) view.findViewById(R.id.dueDateButton);
         dueDateButton.setOnClickListener(new View.OnClickListener() {
