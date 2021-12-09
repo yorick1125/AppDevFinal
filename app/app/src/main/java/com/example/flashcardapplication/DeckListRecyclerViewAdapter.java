@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.example.flashcardapplication.model.Deck;
 import com.example.flashcardapplication.databinding.FragmentHomePageBinding;
+import com.example.flashcardapplication.viewmodel.DeckViewModel;
+
 import java.util.List;
 
 /**
@@ -55,6 +57,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
             @Override
             public boolean onLongClick(View view) {
                 activity.getDeckViewModel().setDeck(holder.deck);
+                activity.getDeckViewModel().setState(DeckViewModel.State.BEFORE_EDIT);
                 activity.getDeckViewModel().notifyChange();
 
                 NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
@@ -62,6 +65,26 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
                 return true;
             }
         });
+    }
+
+    public void setDeck(Deck deck) {
+        int pos = 0;
+        for(Deck d : decks) {
+            if (d.getId() == deck.getId())
+                break;
+            pos++;
+        }
+        if(pos < decks.size()) {
+            decks.set(pos, deck);
+            //notifyItemChanged(pos);
+            notifyDataSetChanged();
+        }
+        // TODO error if not found?
+    }
+
+    public void addDeck(Deck deck) {
+        decks.add(deck);
+        notifyItemInserted(decks.size()-1);
     }
 
     @Override

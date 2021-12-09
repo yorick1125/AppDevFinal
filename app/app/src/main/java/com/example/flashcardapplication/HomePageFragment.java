@@ -3,6 +3,7 @@ package com.example.flashcardapplication;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -17,7 +18,10 @@ import android.view.ViewGroup;
 
 import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.model.Deck;
+import com.example.flashcardapplication.model.DeckTable;
 import com.example.flashcardapplication.sqlite.DatabaseException;
+import com.example.flashcardapplication.viewmodel.DeckViewModel;
+import com.example.flashcardapplication.viewmodel.ObservableModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -32,6 +36,7 @@ public class HomePageFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private MainActivity activity;
+    private DeckListRecyclerViewAdapter adapter;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -89,8 +94,8 @@ public class HomePageFragment extends Fragment {
                 }
             }
 
-
-            recyclerView.setAdapter(new DeckListRecyclerViewAdapter(decks, activity));
+            adapter = new DeckListRecyclerViewAdapter(decks, activity);
+            recyclerView.setAdapter(adapter);
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
@@ -100,7 +105,7 @@ public class HomePageFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                activity.getDeckViewModel().setState(DeckViewModel.State.BEFORE_CREATE);
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
                 navController.navigate(R.id.action_homePageFragment_to_cardListFragment);
             }
@@ -108,5 +113,42 @@ public class HomePageFragment extends Fragment {
 
 
         return view;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context){
+        super.onAttach(context);
+        activity = (MainActivity)getActivity();
+        DeckTable deckTable = (DeckTable) activity.getDeckDBHandler().getDeckTable();
+        activity.getDeckViewModel().addOnUpdateListener(this, new ObservableModel.OnUpdateListener<DeckViewModel>() {
+            @Override
+            public void onUpdate(DeckViewModel item){
+                switch (item.getState()) {
+                    case EDITED:
+                        adapter.setDeck(item.getUpdatedDeck());
+                        try {
+                            deckTable.update(item.getUpdatedDeck());
+                        } catch (DatabaseException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case CREATED:
+                        adapter.addDeck(item.getUpdatedDeck());
+                        try {
+                            deckTable.create(item.getUpdatedDeck());
+                        } catch (DatabaseException e) {
+                            e.printStackTrace();
+                        }
+
+                        break;
+                    case BEFORE_EDIT:
+                    case BEFORE_CREATE:
+                    case NONE:
+                        // do nothing
+                }
+                // TODO: maybe? item.setState(TasksViewModel.State.NONE);
+
+            }
+        });
     }
 }
