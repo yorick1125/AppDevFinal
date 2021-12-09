@@ -83,6 +83,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible"
             />
 
         <Button
@@ -93,7 +94,7 @@
             android:text="No"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:visibility="visible" />
+            tools:visibility="invisible" />
 
         <Button
             android:id="@+id/btnRightAnswer"
@@ -103,7 +104,7 @@
             android:text="Yes"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:visibility="visible" />
+            tools:visibility="invisible" />
 
         <TextView
             android:id="@+id/txtRightAnswer"
@@ -115,7 +116,7 @@
             app:layout_constraintBottom_toTopOf="@+id/btnRightAnswer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:visibility="visible" />
+            tools:visibility="invisible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

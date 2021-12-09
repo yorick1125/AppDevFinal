@@ -50,7 +50,7 @@ public class EditCardFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private boolean isFront;
+    private boolean isFront = true;
     private Card card;
     private MainActivity activity;
 

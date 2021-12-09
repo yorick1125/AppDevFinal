@@ -27,7 +27,7 @@ public class StudyModeFragment extends Fragment {
     private Card currentCard;
     private MainActivity activity;
     private int index;
-    private boolean isFront;
+    private boolean isFront = true;
     private List<Card> cards;
     
     @Override
@@ -46,7 +46,6 @@ public class StudyModeFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        isFront = true;
         binding.txtDeckTitle.setText(deck.getTitle());
         setupCardFlip(view);
 
@@ -62,6 +61,17 @@ public class StudyModeFragment extends Fragment {
 
         binding.layoutStudyResult.setVisibility(View.INVISIBLE);
         binding.layoutStudyAnswer.setVisibility(View.INVISIBLE);
+        //binding.cardBack.setVisibility(View.VISIBLE);
+        /*
+        binding.cardFront.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+         */
+
         binding.btnSkipQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,6 +136,7 @@ public class StudyModeFragment extends Fragment {
         View.OnClickListener startAnimation = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                binding.layoutStudyAnswer.setVisibility(View.VISIBLE);
                 if(isFront)
                 {
                     frontAnimation.setTarget(front);
