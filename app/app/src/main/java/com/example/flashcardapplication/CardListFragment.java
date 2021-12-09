@@ -122,7 +122,7 @@ public class CardListFragment extends Fragment {
         }
              */
 
-        recyclerView.setAdapter(new CardRecyclerViewAdapter(Card.getDefaultCards(), activity));
+        recyclerView.setAdapter(new CardRecyclerViewAdapter(deck.getCards(), activity));
 
         ImageButton dueDateButton = (ImageButton) view.findViewById(R.id.dueDateButton);
         dueDateButton.setOnClickListener(new View.OnClickListener() {
@@ -149,10 +149,11 @@ public class CardListFragment extends Fragment {
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_EDIT)
-                    activity.getDeckViewModel().setState(DeckViewModel.State.EDITED);
-                else
+
+                if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_CREATE)
                     activity.getDeckViewModel().setState(DeckViewModel.State.CREATED);
+                else if (activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_EDIT)
+                    activity.getDeckViewModel().setState(DeckViewModel.State.EDITED);
                 activity.getDeckViewModel().setUpdatedDeck(deck);
                 activity.getDeckViewModel().notifyChange();
                 NavController controller = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
