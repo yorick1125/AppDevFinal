@@ -27,13 +27,28 @@ import java.util.List;
  */
 public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Deck> decks;
+    private List<Deck> decks;
+    private List<Deck> data;
     private MainActivity activity;
     private ViewGroup parent;
 
     public DeckListRecyclerViewAdapter(List<Deck> items, Context context) {
         activity = (MainActivity) context;
         decks = items;
+        data = items;
+    }
+
+    public List<Deck> getTasks(){
+        return decks;
+    }
+    public List<Deck> getData(){
+        return data;
+    }
+    public void setDecks(List<Deck> newTasks) {
+        decks = newTasks;
+    }
+    public void setData(List<Deck> newData){
+        data = newData;
     }
 
     @Override

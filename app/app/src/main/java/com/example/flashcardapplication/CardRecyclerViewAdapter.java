@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.databinding.FragmentCardListItemBinding;
+import com.example.flashcardapplication.model.Deck;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,14 +25,29 @@ import java.util.List;
 public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerViewAdapter.ViewHolder> {
 
     private List<Card> cards;
+    private List<Card> data;
     private MainActivity activity;
 
     public CardRecyclerViewAdapter(List<Card> items, Context context) {
         activity = (MainActivity) context;
         cards = items;
+        data = items;
         if(cards == null){
             cards = new ArrayList<Card>();
         }
+    }
+
+    public List<Card> getTasks(){
+        return cards;
+    }
+    public List<Card> getData(){
+        return data;
+    }
+    public void setCards(List<Card> newTasks) {
+        cards = newTasks;
+    }
+    public void setData(List<Card> newData){
+        data = newData;
     }
 
     @Override

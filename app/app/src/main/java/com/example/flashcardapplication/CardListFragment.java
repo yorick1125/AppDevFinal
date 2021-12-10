@@ -5,9 +5,11 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
@@ -17,6 +19,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +44,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A fragment representing a list of Items.
@@ -186,7 +192,29 @@ public class CardListFragment extends Fragment {
         });
 
 
+        // Filter Edit Text
+        EditText filterText = (EditText) view.findViewById(R.id.cardSearch);
+        filterText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                CardRecyclerViewAdapter adapter = (CardRecyclerViewAdapter) recyclerView.getAdapter();
+                List<Card> filteredList = adapter.getData().stream().filter(d -> d.getFront().toLowerCase().contains(charSequence) || d.getBack().toLowerCase().contains(charSequence)).collect(Collectors.toList());
+                adapter.setCards(filteredList);
+                recyclerView.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
 
         return view;
