@@ -1,9 +1,11 @@
 package com.example.flashcardapplication;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -11,9 +13,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 
 import com.example.flashcardapplication.model.Card;
@@ -25,6 +30,7 @@ import com.example.flashcardapplication.viewmodel.ObservableModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A fragment representing a list of Items.
@@ -112,6 +118,29 @@ public class HomePageFragment extends Fragment {
             }
         });
 
+        // Filter Edit Text
+        EditText filterText = (EditText) view.findViewById(R.id.filterEditText);
+        filterText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                DeckListRecyclerViewAdapter adapter = (DeckListRecyclerViewAdapter) recyclerView.getAdapter();
+                List<Deck> filteredList = adapter.getData().stream().filter(d -> d.getTitle().toLowerCase().contains(charSequence)).collect(Collectors.toList());
+                adapter.setDecks(filteredList);
+                recyclerView.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         return view;
     }
