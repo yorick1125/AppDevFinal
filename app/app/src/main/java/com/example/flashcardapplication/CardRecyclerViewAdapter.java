@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.databinding.FragmentCardListItemBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,12 +23,15 @@ import java.util.List;
  */
 public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Card> cards;
+    private List<Card> cards;
     private MainActivity activity;
 
     public CardRecyclerViewAdapter(List<Card> items, Context context) {
         activity = (MainActivity) context;
         cards = items;
+        if(cards == null){
+            cards = new ArrayList<Card>();
+        }
     }
 
     @Override

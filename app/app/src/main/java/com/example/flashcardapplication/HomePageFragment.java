@@ -105,6 +105,7 @@ public class HomePageFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                activity.getDeckViewModel().setDeck(new Deck());
                 activity.getDeckViewModel().setState(DeckViewModel.State.BEFORE_CREATE);
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
                 navController.navigate(R.id.action_homePageFragment_to_cardListFragment);

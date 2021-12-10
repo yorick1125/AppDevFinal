@@ -50,8 +50,12 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
 
         holder.deck = decks.get(position);
         holder.nameTextView.setText(String.valueOf(decks.get(position).getTitle()));
-        holder.subjectTextView.setText(decks.get(position).getSubject().toString());
-        holder.dueDateTextView.setText(decks.get(position).getDueDate().toString());
+        if(decks.get(position).getSubject() != null){
+            holder.subjectTextView.setText(decks.get(position).getSubject().toString());
+        }
+        if(decks.get(position).getDueDate() != null) {
+            holder.dueDateTextView.setText(decks.get(position).getDueDate().toString());
+        }
         
         holder.deckItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
