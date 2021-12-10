@@ -136,15 +136,19 @@ public class CardListFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                activity.getDeckViewModel().setState(DeckViewModel.State.BEFORE_CREATE);
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
                 navController.navigate(R.id.action_cardListFragment_to_editCardFragment);
             }
         });
-
-        EditText titleEditText = (EditText) view.findViewById(R.id.titleEditText);
-        titleEditText.setText(deck.getTitle());
-        TextView dueDateTextView = (TextView) view.findViewById(R.id.dueDateTextView);
-        dueDateTextView.setText(deck.getDueDate().toString());
+        if(deck.getTitle() != null){
+            EditText titleEditText = (EditText) view.findViewById(R.id.titleEditText);
+            titleEditText.setText(deck.getTitle());
+        }
+        if(deck.getDueDate() != null) {
+            TextView dueDateTextView = (TextView) view.findViewById(R.id.dueDateTextView);
+            dueDateTextView.setText(deck.getDueDate().toString());
+        }
 
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
