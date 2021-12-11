@@ -193,7 +193,7 @@ public class CardListFragment extends Fragment {
 
 
         // Filter Edit Text
-        EditText filterText = (EditText) view.findViewById(R.id.cardSearch);
+        /*EditText filterText = (EditText) view.findViewById(R.id.cardSearch);
         filterText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -214,7 +214,7 @@ public class CardListFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
 
             }
-        });
+        });*/
 
 
         return view;
