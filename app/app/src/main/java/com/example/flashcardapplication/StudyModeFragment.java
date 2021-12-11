@@ -3,7 +3,12 @@ package com.example.flashcardapplication;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +23,13 @@ import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.model.Deck;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class StudyModeFragment extends Fragment {
+
+    private static final long SHAKE_DELAY  = 1500;
 
     private FragmentStudyModeBinding binding;
     private Deck deck;
@@ -29,7 +38,19 @@ public class StudyModeFragment extends Fragment {
     private int index;
     private boolean isFront = true;
     private List<Card> cards;
-    
+    private int wrongAnswers = 0;
+    private int rightAnswers = 0;
+    private AnimatorSet frontAnimation;
+    private AnimatorSet backAnimation;
+
+    private SensorManager sensorManager;
+
+    private float mAccel;
+    private float mAccelCurrent;
+    private float mAccelLast;
+
+    private long lastShake;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -39,6 +60,16 @@ public class StudyModeFragment extends Fragment {
         activity = (MainActivity) this.getActivity();
         deck = activity.getDeckViewModel().getDeck();
         index = 0;
+        cards = new ArrayList<Card>(deck.getCards());
+
+        sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
+        Objects.requireNonNull(sensorManager).registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
+        mAccel = 0f;
+        mAccelCurrent = SensorManager.GRAVITY_EARTH;
+        mAccelLast = SensorManager.GRAVITY_EARTH;
+
+        lastShake = System.currentTimeMillis();
 
         return binding.getRoot();
 
@@ -49,51 +80,31 @@ public class StudyModeFragment extends Fragment {
         binding.txtDeckTitle.setText(deck.getTitle());
         setupCardFlip(view);
 
-        //binding.cardFront.setText(deck.getCards().get(index).getFront());
-
-        if(index < deck.getCards().size())
-        {
-            cards = new ArrayList<Card>(deck.getCards());
-            currentCard = cards.get(index);
-            binding.cardFront.setText(currentCard.getFront());
-            index++;
-        }
-
-        binding.layoutStudyResult.setVisibility(View.INVISIBLE);
-        binding.layoutStudyAnswer.setVisibility(View.INVISIBLE);
-        //binding.cardBack.setVisibility(View.VISIBLE);
-        /*
-        binding.cardFront.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-         */
+        SetDataFields();
 
         binding.btnSkipQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.layoutStudyAnswer.setVisibility(View.VISIBLE);
-                binding.layoutStudyQuestion.setVisibility(View.INVISIBLE);
+                cards.add(currentCard);
+                SetDataFields();
             }
         });
 
         binding.btnWrongAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.layoutStudyAnswer.setVisibility(View.INVISIBLE);
-                binding.layoutStudyQuestion.setVisibility(View.VISIBLE);
+                wrongAnswers++;
+                animate();
+                SetDataFields();
             }
         });
 
         binding.btnRightAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.layoutStudyAnswer.setVisibility(View.INVISIBLE);
-                binding.layoutStudyQuestion.setVisibility(View.INVISIBLE);
-                binding.layoutStudyResult.setVisibility(View.VISIBLE);
+                rightAnswers++;
+                animate();
+                SetDataFields();
             }
         });
 
@@ -107,9 +118,75 @@ public class StudyModeFragment extends Fragment {
         });
     }
 
+    private final SensorEventListener sensorListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
+            mAccelLast = mAccelCurrent;
+            mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
+            float delta = mAccelCurrent - mAccelLast;
+            mAccel = mAccel * 0.9f + delta;
+            if (mAccel > 5) {
+                //Skip question on shake
+                if(binding.layoutStudyQuestion.getVisibility() == View.VISIBLE && System.currentTimeMillis() - lastShake > SHAKE_DELAY)
+                {
+                    lastShake = System.currentTimeMillis();
+                    cards.add(currentCard);
+                    SetDataFields();
+                }
+            }
+        }
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+    };
+
+    @Override
+    public void onResume() {
+        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        sensorManager.unregisterListener(sensorListener);
+        super.onPause();
+    }
+
     private void SetDataFields()
     {
+        if(index < cards.size())
+        {
+            binding.layoutStudyResult.setVisibility(View.INVISIBLE);
+            binding.layoutStudyAnswer.setVisibility(View.INVISIBLE);
+            binding.layoutStudyQuestion.setVisibility(View.VISIBLE);
+            currentCard = cards.get(index);
+            binding.cardFront.setText(currentCard.getFront());
+            index++;
+        }
+        else
+        {
+            //Show Results
+            binding.layoutStudyAnswer.setVisibility(View.INVISIBLE);
+            binding.layoutStudyQuestion.setVisibility(View.INVISIBLE);
+            binding.cardFront.setVisibility(View.INVISIBLE);
+            binding.cardBack.setVisibility(View.INVISIBLE);
 
+            binding.txtRightAnswers.setText("Number of right answers: " + rightAnswers);
+
+            binding.txtWrongAnswers.setText("Number of wrong answers: " + wrongAnswers);
+
+            double percentage = (double)rightAnswers/(double)(wrongAnswers + rightAnswers) * 100;
+            if(Double.isNaN(percentage))
+                percentage = 0;
+            Log.v("Percentage", String.valueOf(percentage));
+
+            binding.txtResultPercentage.setText(percentage + "%");
+            binding.layoutStudyResult.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -130,35 +207,43 @@ public class StudyModeFragment extends Fragment {
             back.setCameraDistance(8000 * scale);
         }
 
-        AnimatorSet frontAnimation = (AnimatorSet) AnimatorInflater.loadAnimator(applicationContext, R.animator.front_animator);
-        AnimatorSet backAnimation = (AnimatorSet) AnimatorInflater.loadAnimator(applicationContext, R.animator.back_animator);
+        frontAnimation = (AnimatorSet) AnimatorInflater.loadAnimator(applicationContext, R.animator.front_animator);
+        backAnimation = (AnimatorSet) AnimatorInflater.loadAnimator(applicationContext, R.animator.back_animator);
 
         View.OnClickListener startAnimation = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.layoutStudyAnswer.setVisibility(View.VISIBLE);
-                if(isFront)
-                {
-                    frontAnimation.setTarget(front);
-                    backAnimation.setTarget(back);
-                    frontAnimation.start();
-                    backAnimation.start();
-                    isFront = false;
-
-                }
-                else
-                {
-                    frontAnimation.setTarget(back);
-                    backAnimation.setTarget(front);
-                    backAnimation.start();
-                    frontAnimation.start();
-                    isFront = true;
-
-                }
+                animate();
             }
         };
         front.setOnClickListener(startAnimation);
         back.setOnClickListener(startAnimation);
+    }
+
+    private void animate()
+    {
+        binding.layoutStudyAnswer.setVisibility(View.VISIBLE);
+        binding.layoutStudyQuestion.setVisibility(View.INVISIBLE);
+        binding.cardBack.setText(currentCard.getBack());
+
+        if(isFront)
+        {
+            frontAnimation.setTarget(binding.cardFront);
+            backAnimation.setTarget(binding.cardBack);
+            frontAnimation.start();
+            backAnimation.start();
+            isFront = false;
+
+        }
+        else
+        {
+            frontAnimation.setTarget(binding.cardBack);
+            backAnimation.setTarget(binding.cardFront);
+            backAnimation.start();
+            frontAnimation.start();
+            isFront = true;
+
+        }
     }
 
 }

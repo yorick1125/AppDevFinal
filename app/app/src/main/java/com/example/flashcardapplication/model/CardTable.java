@@ -58,8 +58,11 @@ public class CardTable extends Table<Card> {
     public void initialize(SQLiteDatabase database) {
         // to do this is just placeholder code
         Card card = new Card("when did ww1 end?", "1918", 1L);
+        Card card2 = new Card("when did ww2 end?", "1945", 1L);
+
         try {
             database.insert(TABLE_NAME, null, toContentValues(card));
+            database.insert(TABLE_NAME, null, toContentValues(card2));
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
