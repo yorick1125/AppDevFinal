@@ -23,6 +23,8 @@ import com.example.flashcardapplication.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 
 public class MainActivity extends AppCompatActivity {
 
