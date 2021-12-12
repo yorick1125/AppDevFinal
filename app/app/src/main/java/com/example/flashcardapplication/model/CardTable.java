@@ -59,10 +59,12 @@ public class CardTable extends Table<Card> {
         // to do this is just placeholder code
         Card card = new Card("when did ww1 end?", "1918", 1L);
         Card card2 = new Card("when did ww2 end?", "1945", 1L);
+        Card card3 = new Card("what is photo synthesis", "synthesizing of photos", 2L);
 
         try {
             database.insert(TABLE_NAME, null, toContentValues(card));
             database.insert(TABLE_NAME, null, toContentValues(card2));
+            database.insert(TABLE_NAME, null, toContentValues(card3));
         } catch (DatabaseException e) {
             e.printStackTrace();
         }

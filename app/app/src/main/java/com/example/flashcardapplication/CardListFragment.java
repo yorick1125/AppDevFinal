@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -34,10 +35,15 @@ import android.widget.Toast;
 
 import com.example.flashcardapplication.databinding.FragmentCardListBinding;
 import com.example.flashcardapplication.model.Card;
+import com.example.flashcardapplication.model.CardTable;
 import com.example.flashcardapplication.model.Deck;
+import com.example.flashcardapplication.model.DeckTable;
+import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.example.flashcardapplication.utils.DatePickerDialogFragment;
 import com.example.flashcardapplication.utils.TimePickerDialogFragment;
+import com.example.flashcardapplication.viewmodel.CardViewModel;
 import com.example.flashcardapplication.viewmodel.DeckViewModel;
+import com.example.flashcardapplication.viewmodel.ObservableModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
@@ -59,6 +65,7 @@ public class CardListFragment extends Fragment {
 
     private Deck deck;
     private FragmentCardListBinding binding;
+    private CardRecyclerViewAdapter adapter;
 
     private static int currentTaskNotificationId = 0;
     private MainActivity activity;
@@ -127,8 +134,8 @@ public class CardListFragment extends Fragment {
             e.printStackTrace();
         }
              */
-
-        recyclerView.setAdapter(new CardRecyclerViewAdapter(deck.getCards(), activity));
+        adapter = new CardRecyclerViewAdapter(deck.getCards(), activity);
+        recyclerView.setAdapter(adapter);
 
         ImageButton dueDateButton = (ImageButton) view.findViewById(R.id.dueDateButton);
         dueDateButton.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +149,8 @@ public class CardListFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.getDeckViewModel().setState(DeckViewModel.State.BEFORE_CREATE);
+                activity.getCardViewModel().setCard(new Card());
+                activity.getCardViewModel().setState(CardViewModel.State.BEFORE_CREATE);
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
                 navController.navigate(R.id.action_cardListFragment_to_editCardFragment);
             }
@@ -160,10 +168,12 @@ public class CardListFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_CREATE)
+                if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_CREATE) {
                     activity.getDeckViewModel().setState(DeckViewModel.State.CREATED);
-                else if (activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_EDIT)
+                }
+                else if (activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_EDIT){
                     activity.getDeckViewModel().setState(DeckViewModel.State.EDITED);
+                }
                 activity.getDeckViewModel().setUpdatedDeck(deck);
                 activity.getDeckViewModel().notifyChange();
                 NavController controller = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
@@ -191,30 +201,22 @@ public class CardListFragment extends Fragment {
             }
         });
 
-
-        // Filter Edit Text
-        /*EditText filterText = (EditText) view.findViewById(R.id.cardSearch);
-        filterText.addTextChangedListener(new TextWatcher() {
+        EditText deckTitleEditText = view.findViewById(R.id.titleEditText);
+        deckTitleEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                CardRecyclerViewAdapter adapter = (CardRecyclerViewAdapter) recyclerView.getAdapter();
-                List<Card> filteredList = adapter.getData().stream().filter(d -> d.getFront().toLowerCase().contains(charSequence) || d.getBack().toLowerCase().contains(charSequence)).collect(Collectors.toList());
-                adapter.setCards(filteredList);
-                recyclerView.setAdapter(adapter);
-
+                deck.setTitle(charSequence.toString());
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
-        });*/
+        });
 
 
         return view;
@@ -337,5 +339,44 @@ public class CardListFragment extends Fragment {
         });
         datePickerDialogFragment.show(getFragmentManager(), "datePicker");
 
+    }
+    @Override
+    public void onAttach(@NonNull Context context){
+        super.onAttach(context);
+        activity = (MainActivity)getActivity();
+        CardTable cardTable = (CardTable) activity.getCardDBHandler().getCardTable();
+        activity.getCardViewModel().addOnUpdateListener(this, new ObservableModel.OnUpdateListener<CardViewModel>() {
+            @Override
+            public void onUpdate(CardViewModel item){
+                /*
+                switch (item.getState()) {
+                    case EDITED:
+                        adapter.setCard(item.getUpdatedCard());
+                        try {
+                            cardTable.update(item.getUpdatedCard());
+                        } catch (DatabaseException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case CREATED:
+                        adapter.addCard(item.getUpdatedCard());
+                        try {
+                            cardTable.create(item.getUpdatedCard());
+                        } catch (DatabaseException e) {
+                            e.printStackTrace();
+                        }
+
+                        break;
+                    case BEFORE_EDIT:
+                    case BEFORE_CREATE:
+                    case NONE:
+                        // do nothing
+                }
+
+                 */
+                // TODO: maybe? item.setState(TasksViewModel.State.NONE);
+
+            }
+        });
     }
 }
