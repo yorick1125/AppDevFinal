@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.flashcardapplication.model.Deck;
 import com.example.flashcardapplication.databinding.FragmentHomePageBinding;
+import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.example.flashcardapplication.viewmodel.DeckViewModel;
 
 import java.util.List;
@@ -84,6 +85,19 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
                 return true;
             }
         });
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                decks.remove(holder.deck);
+                data.remove(holder.deck);
+                try {
+                    activity.getDeckDBHandler().getDeckTable().delete(holder.deck);
+                } catch (DatabaseException e) {
+                    e.printStackTrace();
+                }
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public void setDeck(Deck deck) {
@@ -117,6 +131,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
         public final TextView dueDateTextView;
         public final LinearLayout deckItemLayout;
         public final ImageButton playButton;
+        public final ImageButton deleteButton;
         public Deck deck;
 
         public ViewHolder(FragmentHomePageBinding binding) {
@@ -126,7 +141,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
             dueDateTextView = binding.deckDueDate;
             playButton = binding.deckPlayButton;
             deckItemLayout = binding.deckItemLayout;
-
+            deleteButton = binding.deckDeleteButton;
             playButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -137,6 +152,8 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
                             .navigate(R.id.action_homePageFragment_to_studyModeFragment);
                 }
             });
+
+
 
 
         }

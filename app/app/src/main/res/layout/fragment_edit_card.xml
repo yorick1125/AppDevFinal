@@ -103,12 +103,11 @@
         android:id="@+id/cardImageView"
         android:layout_width="90dp"
         android:layout_height="68dp"
-        android:layout_marginBottom="244dp"
         android:src="@drawable/ic_launcher_background"
-        app:layout_constraintBottom_toTopOf="@+id/editCardBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.704"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="263dp" />
 
     <!--Add a textview for back part of the card-->
 
@@ -145,27 +144,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.615" />
 
-
-
-    <Button
-        android:id="@+id/editCardBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="Edit Card"
-        app:layout_constraintBottom_toTopOf="@+id/deleteBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/deleteBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:text="Delete"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
