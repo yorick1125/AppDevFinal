@@ -26,14 +26,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.flashcardapplication.databinding.FragmentCardListBinding;
+import com.example.flashcardapplication.enums.Subjects;
 import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.model.CardTable;
 import com.example.flashcardapplication.model.Deck;
@@ -48,10 +52,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.security.auth.Subject;
 
 /**
  * A fragment representing a list of Items.
@@ -136,6 +143,12 @@ public class CardListFragment extends Fragment {
              */
         adapter = new CardRecyclerViewAdapter(deck.getCards(), activity);
         recyclerView.setAdapter(adapter);
+        String[] values = { "History", "Science", "Math" };
+        Spinner spin = (Spinner) view.findViewById(R.id.subjectSpinner);
+        List<Subjects> subjects = Arrays.asList(Subjects.values());
+        ArrayAdapter<Subjects> adapter = new ArrayAdapter<Subjects>(activity, android.R.layout.simple_spinner_dropdown_item, subjects);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin.setAdapter(adapter);
 
         ImageButton dueDateButton = (ImageButton) view.findViewById(R.id.dueDateButton);
         dueDateButton.setOnClickListener(new View.OnClickListener() {
@@ -158,6 +171,9 @@ public class CardListFragment extends Fragment {
         if(deck.getTitle() != null){
             EditText titleEditText = (EditText) view.findViewById(R.id.titleEditText);
             titleEditText.setText(deck.getTitle());
+        }
+        if(deck.getSubject() != null){
+            spin.setSelection(deck.getSubject().ordinal());
         }
         if(deck.getDueDate() != null) {
             TextView dueDateTextView = (TextView) view.findViewById(R.id.dueDateTextView);

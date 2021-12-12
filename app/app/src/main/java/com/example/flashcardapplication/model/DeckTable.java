@@ -69,10 +69,12 @@ public class DeckTable extends Table<Deck> {
     public void initialize(SQLiteDatabase database) {
         // to do this is just placeholder code
 
-        Deck deck = new Deck("history");
+        Deck deck = new Deck("dates");
         deck.setDueDate(new Date());
-        Deck deck2 = new Deck("science");
+        deck.setSubject(Subjects.History);
+        Deck deck2 = new Deck("plants");
         deck2.setDueDate(new Date());
+        deck2.setSubject(Subjects.Science);
 
         try {
             database.insert(TABLE_NAME, null, toContentValues(deck));
