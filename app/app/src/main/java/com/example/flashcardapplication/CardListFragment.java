@@ -143,12 +143,25 @@ public class CardListFragment extends Fragment {
              */
         adapter = new CardRecyclerViewAdapter(deck.getCards(), activity);
         recyclerView.setAdapter(adapter);
-        String[] values = { "History", "Science", "Math" };
+
         Spinner spin = (Spinner) view.findViewById(R.id.subjectSpinner);
-        List<Subjects> subjects = Arrays.asList(Subjects.values());
-        ArrayAdapter<Subjects> adapter = new ArrayAdapter<Subjects>(activity, android.R.layout.simple_spinner_dropdown_item, subjects);
+        ArrayAdapter<Subjects> adapter = new ArrayAdapter<Subjects>(activity, android.R.layout.simple_spinner_dropdown_item, Arrays.asList(Subjects.values()));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(adapter);
+        spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
+            {
+                deck.setSubject((Subjects) parentView.getItemAtPosition(position));
+                activity.getDeckViewModel().setUpdatedDeck(deck);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView)
+            {
+            }
+        });
 
         ImageButton dueDateButton = (ImageButton) view.findViewById(R.id.dueDateButton);
         dueDateButton.setOnClickListener(new View.OnClickListener() {
