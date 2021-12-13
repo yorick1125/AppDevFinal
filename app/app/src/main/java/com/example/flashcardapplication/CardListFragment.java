@@ -171,9 +171,18 @@ public class CardListFragment extends Fragment {
             }
         });
         FloatingActionButton fab = view.findViewById(R.id.addCardFab);
+
+        if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_CREATE){
+            fab.setVisibility(View.GONE);
+        }
+        else{
+            fab.setVisibility(View.VISIBLE);
+        }
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 activity.getCardViewModel().setCard(new Card());
                 activity.getCardViewModel().setState(CardViewModel.State.BEFORE_CREATE);
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
@@ -390,7 +399,7 @@ public class CardListFragment extends Fragment {
                         if(deck != null){
                             deck.getCards().add(item.getUpdatedCard());
                         }
-                        //adapter.addCard(item.getUpdatedCard());
+                        adapter.addCard(item.getUpdatedCard());
                         adapter.notifyDataSetChanged();
                         try {
                             System.out.println(activity.getCardDBHandler().getCardTable().readAll().size());
