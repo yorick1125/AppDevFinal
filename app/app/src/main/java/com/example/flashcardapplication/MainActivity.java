@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    public ActivityMainBinding getBinding(){return binding;}
+
     private DeckDBHandler deckDBHandler;
     private CardDBHandler cardDBHandler;
 
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     public CardViewModel getCardViewModel() {
         return cardViewModel;
     }
+
 
 
     @Override
