@@ -145,8 +145,7 @@ public class EditCardFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                activity.getCardViewModel().getCard().setFront(charSequence.toString());
-                //activity.getCardViewModel().notifyChange();
+                card.setFront(charSequence.toString());
                 cardFront.setText(charSequence.toString());
             }
 
@@ -163,8 +162,7 @@ public class EditCardFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                activity.getCardViewModel().getCard().setBack(charSequence.toString());
-                //activity.getCardViewModel().notifyChange();
+                card.setBack(charSequence.toString());
                 cardBack.setText(charSequence.toString());
             }
 
@@ -184,6 +182,7 @@ public class EditCardFragment extends Fragment {
                 else if (activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_EDIT){
                     activity.getCardViewModel().setState(CardViewModel.State.EDITED);
                 }
+                card.setDeckId(activity.getDeckViewModel().getDeck().getId());
                 activity.getCardViewModel().setUpdatedCard(card);
                 activity.getCardViewModel().notifyChange();
                 NavController controller = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);

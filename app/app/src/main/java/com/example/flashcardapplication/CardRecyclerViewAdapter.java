@@ -8,6 +8,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,8 @@ import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.databinding.FragmentCardListItemBinding;
 import com.example.flashcardapplication.model.Deck;
 //import com.example.flashcardapplication.viewmodel.CardViewModel;
+import com.example.flashcardapplication.sqlite.DatabaseException;
+import com.example.flashcardapplication.viewmodel.CardViewModel;
 import com.example.flashcardapplication.viewmodel.DeckViewModel;
 
 import java.util.ArrayList;
@@ -67,12 +70,25 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerVi
             @Override
             public boolean onLongClick(View view) {
                 activity.getCardViewModel().setCard(holder.card);
-                //activity.getCardViewModel().setState(CardViewModel.State.BEFORE_EDIT);
+                activity.getCardViewModel().setState(CardViewModel.State.BEFORE_EDIT);
                 activity.getCardViewModel().notifyChange();
 
                 NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
                 navController.navigate(R.id.action_cardListFragment_to_editCardFragment);
                 return true;
+            }
+        });
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cards.remove(holder.card);
+                data.remove(holder.card);
+                try {
+                    activity.getCardDBHandler().getCardTable().delete(holder.card);
+                } catch (DatabaseException e) {
+                    e.printStackTrace();
+                }
+                notifyDataSetChanged();
             }
         });
     }
@@ -105,6 +121,7 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerVi
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView question;
         public final TextView answer;
+        public final ImageButton deleteButton;
         public Card card;
         public final LinearLayout cardItemLayout;
 
@@ -113,7 +130,7 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerVi
             question = binding.cardQuestion;
             answer = binding.cardAnswer;
             cardItemLayout = binding.cardItemLayout;
-
+            deleteButton = binding.cardDeleteButton;
 
         }
 
