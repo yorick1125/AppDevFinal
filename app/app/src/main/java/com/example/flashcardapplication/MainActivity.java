@@ -3,9 +3,7 @@ package com.example.flashcardapplication;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 
-import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.icu.number.Scale;
 
 import android.os.Bundle;
 
@@ -13,13 +11,9 @@ import com.example.flashcardapplication.model.CardDBHandler;
 import com.example.flashcardapplication.model.DeckDBHandler;
 import com.example.flashcardapplication.viewmodel.CardViewModel;
 import com.example.flashcardapplication.viewmodel.DeckViewModel;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
-
-import androidx.cardview.widget.CardView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -29,13 +23,8 @@ import com.example.flashcardapplication.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-
-import android.widget.ImageView;
-
-import android.widget.TextView;
-
-import android.widget.Toolbar;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,19 +32,18 @@ public class MainActivity extends AppCompatActivity {
     public static String DECK_OVERDUE_NOTIFICATION_CHANNEL = "deck-overdue-notification-channel";
     public static String DECK_DUE_IN_DAY_NOTIFICATION_CHANNEL = "deck-due-in-day-notification-channel";
 
-
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
     private DeckDBHandler deckDBHandler;
     private CardDBHandler cardDBHandler;
+
     public DeckDBHandler getDeckDBHandler(){
         return deckDBHandler;
     }
     public CardDBHandler getCardDBHandler() { return cardDBHandler; }
     private DeckViewModel deckViewModel;
     private CardViewModel cardViewModel;
-    private AnimatorSet frontAnimation;
-    private AnimatorSet backAnimation;
+
 
     public MainActivity()
     {

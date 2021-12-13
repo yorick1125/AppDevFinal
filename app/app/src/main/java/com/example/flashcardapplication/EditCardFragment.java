@@ -12,13 +12,18 @@ import android.content.Context;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +36,11 @@ import android.widget.Toast;
 import android.widget.TextView;
 
 import com.example.flashcardapplication.model.Card;
+import com.example.flashcardapplication.sqlite.DatabaseException;
+import com.example.flashcardapplication.viewmodel.CardViewModel;
+import com.example.flashcardapplication.viewmodel.DeckViewModel;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -97,7 +106,6 @@ public class EditCardFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_edit_card, container, false);
         activity = (MainActivity) getActivity();
         card = activity.getCardViewModel().getCard();
-
         selectedImage = view.findViewById(R.id.cardImageView);
         cameraBtn = view.findViewById(R.id.cameraBtn);
         galleryBtn = view.findViewById(R.id.galleryBtn);
@@ -119,10 +127,71 @@ public class EditCardFragment extends Fragment {
         EditText editTextAnswer = (EditText) view.findViewById(R.id.editTextAnswer);
         TextView cardFront = (TextView) view.findViewById(R.id.card_front);
         TextView cardBack = (TextView) view.findViewById(R.id.card_back);
-        cardFront.setText(card.getFront());
-        cardBack.setText(card.getBack());
-        editTextQuestion.setText(card.getFront());
-        editTextAnswer.setText(card.getBack());
+        if(card != null){
+            if(card.getFront() != null){
+                cardFront.setText(card.getFront());
+                editTextQuestion.setText(card.getFront());
+            }
+            if(card.getBack() != null){
+                cardBack.setText(card.getBack());
+                editTextAnswer.setText(card.getBack());
+            }
+        }
+        editTextQuestion.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                activity.getCardViewModel().getCard().setFront(charSequence.toString());
+                //activity.getCardViewModel().notifyChange();
+                cardFront.setText(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        editTextAnswer.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                activity.getCardViewModel().getCard().setBack(charSequence.toString());
+                //activity.getCardViewModel().notifyChange();
+                cardBack.setText(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                if(activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_CREATE) {
+                    activity.getCardViewModel().setState(CardViewModel.State.CREATED);
+                }
+                else if (activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_EDIT){
+                    activity.getCardViewModel().setState(CardViewModel.State.EDITED);
+                }
+                activity.getCardViewModel().setUpdatedCard(card);
+                activity.getCardViewModel().notifyChange();
+                NavController controller = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
+                controller.popBackStack();
+
+
+            }
+        });
 
         return view;
     }

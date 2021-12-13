@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.flashcardapplication.model.Deck;
 import com.example.flashcardapplication.databinding.FragmentHomePageBinding;
+import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.example.flashcardapplication.viewmodel.DeckViewModel;
 
 import java.util.List;
@@ -27,13 +28,28 @@ import java.util.List;
  */
 public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Deck> decks;
+    private List<Deck> decks;
+    private List<Deck> data;
     private MainActivity activity;
     private ViewGroup parent;
 
     public DeckListRecyclerViewAdapter(List<Deck> items, Context context) {
         activity = (MainActivity) context;
         decks = items;
+        data = items;
+    }
+
+    public List<Deck> getTasks(){
+        return decks;
+    }
+    public List<Deck> getData(){
+        return data;
+    }
+    public void setDecks(List<Deck> newTasks) {
+        decks = newTasks;
+    }
+    public void setData(List<Deck> newData){
+        data = newData;
     }
 
     @Override
@@ -50,8 +66,12 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
 
         holder.deck = decks.get(position);
         holder.nameTextView.setText(String.valueOf(decks.get(position).getTitle()));
-        holder.subjectTextView.setText(decks.get(position).getSubject().toString());
-        holder.dueDateTextView.setText(decks.get(position).getDueDate().toString());
+        if(decks.get(position).getSubject() != null){
+            holder.subjectTextView.setText(decks.get(position).getSubject().toString());
+        }
+        if(decks.get(position).getDueDate() != null) {
+            holder.dueDateTextView.setText(decks.get(position).getDueDate().toString());
+        }
         
         holder.deckItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -63,6 +83,19 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
                 NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
                 navController.navigate(R.id.action_homePageFragment_to_cardListFragment);
                 return true;
+            }
+        });
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                decks.remove(holder.deck);
+                data.remove(holder.deck);
+                try {
+                    activity.getDeckDBHandler().getDeckTable().delete(holder.deck);
+                } catch (DatabaseException e) {
+                    e.printStackTrace();
+                }
+                notifyDataSetChanged();
             }
         });
     }
@@ -98,6 +131,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
         public final TextView dueDateTextView;
         public final LinearLayout deckItemLayout;
         public final ImageButton playButton;
+        public final ImageButton deleteButton;
         public Deck deck;
 
         public ViewHolder(FragmentHomePageBinding binding) {
@@ -107,7 +141,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
             dueDateTextView = binding.deckDueDate;
             playButton = binding.deckPlayButton;
             deckItemLayout = binding.deckItemLayout;
-
+            deleteButton = binding.deckDeleteButton;
             playButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -118,6 +152,8 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
                             .navigate(R.id.action_homePageFragment_to_studyModeFragment);
                 }
             });
+
+
 
 
         }

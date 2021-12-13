@@ -37,11 +37,11 @@ public class CardViewModel extends ObservableModel<CardViewModel> {
         this.card = card;
     }
 
-    public Card getUpdatedDeck() {
+    public Card getUpdatedCard() {
         return updatedCard;
     }
 
-    public void setUpdatedDeck(Card updatedCard) {
+    public void setUpdatedCard(Card updatedCard) {
         this.updatedCard = updatedCard;
     }
 }

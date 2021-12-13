@@ -37,7 +37,9 @@ public class DeckTable extends Table<Deck> {
     @Override
     protected ContentValues toContentValues(Deck deck) throws DatabaseException {
         ContentValues values = new ContentValues();
-        values.put(COLUMN_TITLE, deck.getTitle());
+        if(deck.getTitle() != null){
+            values.put(COLUMN_TITLE, deck.getTitle());
+        }
         if(deck.getDueDate() != null){
             values.put(COLUMN_DUEDATE, deck.getDueDate().getTime());
         }
@@ -67,18 +69,13 @@ public class DeckTable extends Table<Deck> {
     public void initialize(SQLiteDatabase database) {
         // to do this is just placeholder code
 
-        Deck deck = new Deck("history");
+        Deck deck = new Deck("dates");
         deck.setDueDate(new Date());
-        Deck deck2 = new Deck("science");
+        deck.setSubject(Subjects.History);
+        Deck deck2 = new Deck("plants");
         deck2.setDueDate(new Date());
-        List<Card> cardList = new ArrayList<>();
-        List<Card> cardList2 = new ArrayList<>();
-        cardList.add(new Card("when did ww1 end?", "1918", 1L));
-        cardList.add(new Card("when did ww2 end?", "1945", 1L));
-        cardList2.add(new Card("another name for h20", "wata", 2L));
-        cardList2.add(new Card("3 states of matter", "solid, liquid, gas", 2L));
-        deck.setCards(cardList);
-        deck2.setCards(cardList2);
+        deck2.setSubject(Subjects.Science);
+
         try {
             database.insert(TABLE_NAME, null, toContentValues(deck));
             database.insert(TABLE_NAME, null, toContentValues(deck2));
