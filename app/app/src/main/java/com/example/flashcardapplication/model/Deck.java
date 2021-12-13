@@ -25,6 +25,7 @@ public class Deck implements Identifiable<Long> {
     public Deck(){
         this.id = 0L;
         this.title = "";
+        this.cards = new ArrayList<>();
     }
 
     public Deck(String title){

@@ -32,12 +32,6 @@
             android:textColor="#000000"
             android:textSize="20sp" />
 
-        <ImageView
-            android:id="@+id/questionImageView"
-            android:layout_width="84dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="100dp"
-            app:srcCompat="@drawable/ic_launcher_background" />
     </LinearLayout>
 
     <LinearLayout
@@ -64,6 +58,14 @@
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="#000000"
             android:textSize="20sp" />
+
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/cardDeleteButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
 
 </LinearLayout>

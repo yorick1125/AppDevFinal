@@ -85,6 +85,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
                 return true;
             }
         });
+
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

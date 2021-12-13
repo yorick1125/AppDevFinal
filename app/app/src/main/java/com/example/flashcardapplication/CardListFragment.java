@@ -154,7 +154,6 @@ public class CardListFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
             {
                 deck.setSubject((Subjects) parentView.getItemAtPosition(position));
-                activity.getDeckViewModel().setUpdatedDeck(deck);
             }
 
             @Override
@@ -380,16 +379,24 @@ public class CardListFragment extends Fragment {
                 switch (item.getState()) {
                     case EDITED:
                         adapter.setCard(item.getUpdatedCard());
+                        adapter.notifyDataSetChanged();
                         try {
-                            cardTable.update(item.getUpdatedCard());
+                            activity.getCardDBHandler().getCardTable().update(item.getUpdatedCard());
                         } catch (DatabaseException e) {
                             e.printStackTrace();
                         }
                         break;
                     case CREATED:
-                        adapter.addCard(item.getUpdatedCard());
+                        if(deck != null){
+                            deck.getCards().add(item.getUpdatedCard());
+                        }
+                        //adapter.addCard(item.getUpdatedCard());
+                        adapter.notifyDataSetChanged();
                         try {
-                            cardTable.create(item.getUpdatedCard());
+                            System.out.println(activity.getCardDBHandler().getCardTable().readAll().size());
+                            activity.getCardDBHandler().getCardTable().create(item.getUpdatedCard());
+                            System.out.println(item.getUpdatedCard().getFront());
+                            System.out.println(activity.getCardDBHandler().getCardTable().readAll().size());
                         } catch (DatabaseException e) {
                             e.printStackTrace();
                         }
