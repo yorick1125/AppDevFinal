@@ -377,7 +377,6 @@ public class CardListFragment extends Fragment {
         activity.getCardViewModel().addOnUpdateListener(this, new ObservableModel.OnUpdateListener<CardViewModel>() {
             @Override
             public void onUpdate(CardViewModel item){
-                /*
                 switch (item.getState()) {
                     case EDITED:
                         adapter.setCard(item.getUpdatedCard());
@@ -402,7 +401,6 @@ public class CardListFragment extends Fragment {
                         // do nothing
                 }
 
-                 */
                 // TODO: maybe? item.setState(TasksViewModel.State.NONE);
 
             }
