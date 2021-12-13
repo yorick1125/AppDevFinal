@@ -39,6 +39,7 @@ import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.example.flashcardapplication.viewmodel.CardViewModel;
 import com.example.flashcardapplication.viewmodel.DeckViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Date;
 import java.util.Timer;
@@ -175,19 +176,24 @@ public class EditCardFragment extends Fragment {
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-
+                String message = "";
                 if(activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_CREATE) {
                     activity.getCardViewModel().setState(CardViewModel.State.CREATED);
+                    message = "Card created successfully!";
                 }
                 else if (activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_EDIT){
                     activity.getCardViewModel().setState(CardViewModel.State.EDITED);
+                    message = "Card edited successfully!";
                 }
                 card.setDeckId(activity.getDeckViewModel().getDeck().getId());
                 activity.getCardViewModel().setUpdatedCard(card);
                 activity.getCardViewModel().notifyChange();
                 NavController controller = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
                 controller.popBackStack();
+                Snackbar snackbar = Snackbar
+                        .make(activity.getBinding().getRoot(), message, 2000);
 
+                snackbar.show();
 
             }
         });

@@ -49,6 +49,7 @@ import com.example.flashcardapplication.viewmodel.CardViewModel;
 import com.example.flashcardapplication.viewmodel.DeckViewModel;
 import com.example.flashcardapplication.viewmodel.ObservableModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 
 import java.text.SimpleDateFormat;
@@ -204,12 +205,14 @@ public class CardListFragment extends Fragment {
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-
+                String message = "";
                 if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_CREATE) {
                     activity.getDeckViewModel().setState(DeckViewModel.State.CREATED);
+                    message = "Deck created successfully";
                 }
                 else if (activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_EDIT){
                     activity.getDeckViewModel().setState(DeckViewModel.State.EDITED);
+                    message = "Deck edited successfully";
                 }
                 activity.getDeckViewModel().setUpdatedDeck(deck);
                 activity.getDeckViewModel().notifyChange();
@@ -234,6 +237,10 @@ public class CardListFragment extends Fragment {
                     });
                     thread.start();
                 }
+                Snackbar snackbar = Snackbar
+                        .make(activity.getBinding().getRoot(), message, 2000);
+
+                snackbar.show();
 
             }
         });
@@ -399,7 +406,6 @@ public class CardListFragment extends Fragment {
                         if(deck != null){
                             deck.getCards().add(item.getUpdatedCard());
                         }
-                        adapter.addCard(item.getUpdatedCard());
                         adapter.notifyDataSetChanged();
                         try {
                             System.out.println(activity.getCardDBHandler().getCardTable().readAll().size());
