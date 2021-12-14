@@ -186,7 +186,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
                     deckItemLayout.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
                     break;
                 case Art:
-                    deckItemLayout.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
+                    deckItemLayout.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
                     break;
                 case None:
                     deckItemLayout.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
