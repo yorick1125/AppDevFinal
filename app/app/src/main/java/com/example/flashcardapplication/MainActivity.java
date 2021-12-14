@@ -20,6 +20,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.flashcardapplication.databinding.ActivityMainBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    public ActivityMainBinding getBinding(){return binding;}
+
     private DeckDBHandler deckDBHandler;
     private CardDBHandler cardDBHandler;
 
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     public CardViewModel getCardViewModel() {
         return cardViewModel;
     }
+
 
 
     @Override
@@ -127,5 +131,12 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void showSnackbar(String message){
+        Snackbar snackbar = Snackbar
+                .make(getBinding().getRoot(), message, 2000);
+
+        snackbar.show();
     }
 }

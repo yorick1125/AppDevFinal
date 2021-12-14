@@ -1,5 +1,7 @@
 package com.example.flashcardapplication;
 
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
@@ -53,6 +55,7 @@ import com.example.flashcardapplication.viewmodel.CardViewModel;
 import com.example.flashcardapplication.viewmodel.DeckViewModel;
 import com.example.flashcardapplication.viewmodel.ObservableModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 
 import java.text.SimpleDateFormat;
@@ -162,7 +165,6 @@ public class CardListFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
             {
                 deck.setSubject((Subjects) parentView.getItemAtPosition(position));
-                activity.getDeckViewModel().setUpdatedDeck(deck);
             }
 
             @Override
@@ -180,9 +182,18 @@ public class CardListFragment extends Fragment {
             }
         });
         FloatingActionButton fab = view.findViewById(R.id.addCardFab);
+
+        if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_CREATE){
+            fab.setVisibility(View.GONE);
+        }
+        else{
+            fab.setVisibility(View.VISIBLE);
+        }
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 activity.getCardViewModel().setCard(new Card());
                 activity.getCardViewModel().setState(CardViewModel.State.BEFORE_CREATE);
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
@@ -204,12 +215,35 @@ public class CardListFragment extends Fragment {
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                if(deck.getTitle() == null || deck.getTitle().equals("")){
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+                    alertDialogBuilder.setTitle("Title cannot be empty");
+                    alertDialogBuilder.setMessage("No new deck will be created");
+                    alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
+                            navController.popBackStack();
+                            dialogInterface.cancel();
+                        }
+                    });
+                    alertDialogBuilder.setCancelable(true);
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
 
+                    return;
+                }
+
+
+
+                String message = "";
                 if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_CREATE) {
                     activity.getDeckViewModel().setState(DeckViewModel.State.CREATED);
+                    message = "Deck created successfully";
                 }
                 else if (activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_EDIT){
                     activity.getDeckViewModel().setState(DeckViewModel.State.EDITED);
+                    message = "Deck edited successfully";
                 }
                 activity.getDeckViewModel().setUpdatedDeck(deck);
                 activity.getDeckViewModel().notifyChange();
@@ -279,6 +313,10 @@ public class CardListFragment extends Fragment {
                     });
                     thread.start();
                 }
+                Snackbar snackbar = Snackbar
+                        .make(activity.getBinding().getRoot(), message, 2000);
+
+                snackbar.show();
 
             }
         });
@@ -432,20 +470,25 @@ public class CardListFragment extends Fragment {
         activity.getCardViewModel().addOnUpdateListener(this, new ObservableModel.OnUpdateListener<CardViewModel>() {
             @Override
             public void onUpdate(CardViewModel item){
-                /*
                 switch (item.getState()) {
                     case EDITED:
                         adapter.setCard(item.getUpdatedCard());
+                        adapter.notifyDataSetChanged();
                         try {
-                            cardTable.update(item.getUpdatedCard());
+                            activity.getCardDBHandler().getCardTable().update(item.getUpdatedCard());
+                            activity.showSnackbar("Card edited successfully!");
                         } catch (DatabaseException e) {
                             e.printStackTrace();
                         }
                         break;
                     case CREATED:
-                        adapter.addCard(item.getUpdatedCard());
+                        if(deck != null){
+                            deck.getCards().add(item.getUpdatedCard());
+                        }
+                        adapter.notifyDataSetChanged();
                         try {
-                            cardTable.create(item.getUpdatedCard());
+                            activity.getCardDBHandler().getCardTable().create(item.getUpdatedCard());
+                            activity.showSnackbar("Card created successfully!");
                         } catch (DatabaseException e) {
                             e.printStackTrace();
                         }
@@ -457,7 +500,6 @@ public class CardListFragment extends Fragment {
                         // do nothing
                 }
 
-                 */
                 // TODO: maybe? item.setState(TasksViewModel.State.NONE);
 
             }

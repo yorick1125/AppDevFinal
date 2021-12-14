@@ -33,13 +33,13 @@ public class CardDBHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, int i, int i1) {
         // not sure what needs to go in here
-        database.execSQL("DROP TABLE IF EXISTS " + cardTable.getName());
-        onCreate(database);
+        //database.execSQL("DROP TABLE IF EXISTS " + cardTable.getName());
+        //onCreate(database);
     }
     @Override
     public void onDowngrade(SQLiteDatabase database, int i, int i1) {
         // not sure what needs to go in here
-        database.execSQL("DROP TABLE IF EXISTS " + cardTable.getName());
-        onCreate(database);
+        //database.execSQL("DROP TABLE IF EXISTS " + cardTable.getName());
+        //onCreate(database);
     }
 }

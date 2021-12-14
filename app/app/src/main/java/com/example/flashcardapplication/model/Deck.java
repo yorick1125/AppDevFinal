@@ -3,11 +3,14 @@ package com.example.flashcardapplication.model;
 import com.example.flashcardapplication.enums.Subjects;
 import com.example.flashcardapplication.sqlite.Identifiable;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class Deck implements Identifiable<Long> {
+    private static SimpleDateFormat formatter =  new SimpleDateFormat("EEEE, MMMM dd, YYYY @ h:mm aa");
+
     private Long id;
     private String title;
     private List<Card> cards;
@@ -25,6 +28,7 @@ public class Deck implements Identifiable<Long> {
     public Deck(){
         this.id = 0L;
         this.title = "";
+        this.cards = new ArrayList<>();
     }
 
     public Deck(String title){
@@ -47,6 +51,11 @@ public class Deck implements Identifiable<Long> {
         this.dueDate = dueDate;
         return this;
     }
+
+    public String getDueString() {
+        return dueDate != null ? formatter.format(dueDate): "";
+    }
+
 
     public Subjects getSubject() {
         return subject;
