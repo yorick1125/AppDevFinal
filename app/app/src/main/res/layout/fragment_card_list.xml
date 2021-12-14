@@ -6,8 +6,8 @@
     android:name="com.example.flashcardapplication.CardListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+
+    android:background="#77E6F4"
     app:layoutManager="LinearLayoutManager"
     tools:context=".CardListFragment"
     tools:listitem="@layout/fragment_card_list_item">
@@ -119,6 +119,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

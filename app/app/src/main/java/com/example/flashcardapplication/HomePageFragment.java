@@ -71,10 +71,13 @@ public class HomePageFragment extends Fragment {
             public void onUpdate(DeckViewModel item){
                 switch (item.getState()) {
                     case EDITED :
-                        adapter.setDeck(item.getUpdatedDeck());
-                        adapter.notifyDataSetChanged();
+
                         try {
                             activity.getDeckDBHandler().getDeckTable().update(item.getUpdatedDeck());
+                            if(adapter.setDeck(item.getUpdatedDeck())){
+                                activity.showSnackbar("Deck edited successfully!");
+                            }
+                            adapter.notifyDataSetChanged();
                         } catch (DatabaseException e) {
                             e.printStackTrace();
                         }
@@ -84,8 +87,7 @@ public class HomePageFragment extends Fragment {
                         adapter.notifyDataSetChanged();
                         try {
                             activity.getDeckDBHandler().getDeckTable().create(item.getUpdatedDeck());
-                            System.out.println(item.getUpdatedDeck().getTitle());
-                            System.out.println(activity.getDeckDBHandler().getDeckTable().readAll().size());
+                            activity.showSnackbar("Deck created successfully!");
                         } catch (DatabaseException e) {
                             e.printStackTrace();
                         }
