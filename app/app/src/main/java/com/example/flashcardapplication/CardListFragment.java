@@ -91,6 +91,8 @@ public class CardListFragment extends Fragment {
     private TextView date;
     private Switch calendarSwitch;
 
+    private boolean dateChanged;
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -254,7 +256,8 @@ public class CardListFragment extends Fragment {
 
 
                 // check if due date is past current date and check if it is null
-                if( deck.getDueDate() != null && deck.getDueDate().getTime() > new Date().getTime()){
+                System.out.println(dateChanged);
+                if( deck.getDueDate() != null && deck.getDueDate().getTime() > new Date().getTime() && dateChanged){
 
                     title = activity.findViewById(R.id.titleEditText);
                     description = activity.findViewById(R.id.subjectSpinner);
@@ -417,6 +420,7 @@ public class CardListFragment extends Fragment {
         TextView dueDateTextView = (TextView) view.findViewById(R.id.dueDateTextView);
         dueDateTextView.setText(new SimpleDateFormat("EEEE").format(date) + ", " + new SimpleDateFormat("MMMM").format(date) + " " + new SimpleDateFormat("d").format(date) + " at " + new SimpleDateFormat("h:mm aa").format(date));
         deck.setDueDate(date);
+        dateChanged = true;
 
 
         DatePickerDialogFragment datePickerDialogFragment = DatePickerDialogFragment.create(date, new DatePickerDialog.OnDateSetListener() {
@@ -433,8 +437,6 @@ public class CardListFragment extends Fragment {
                 calendar.set(Calendar.SECOND, 59);
                 calendar.set(Calendar.MILLISECOND, 59);
                 Date date = calendar.getTime();
-                deck.setDueDate(date);
-
 
 
                 // check if date is old
@@ -473,6 +475,7 @@ public class CardListFragment extends Fragment {
     public void onAttach(@NonNull Context context){
         super.onAttach(context);
         activity = (MainActivity)getActivity();
+        dateChanged = false;
         CardTable cardTable = (CardTable) activity.getCardDBHandler().getCardTable();
         activity.getCardViewModel().addOnUpdateListener(this, new ObservableModel.OnUpdateListener<CardViewModel>() {
             @Override

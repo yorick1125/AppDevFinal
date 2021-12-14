@@ -17,6 +17,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flashcardapplication.databinding.FragmentStudyModeBinding;
 import com.example.flashcardapplication.model.Card;
@@ -39,10 +41,13 @@ public class StudyModeFragment extends Fragment {
     private int index;
     private boolean isFront = true;
     private List<Card> cards;
-    private int wrongAnswers = 0;
+    private List<Card> wrongCards;
     private int rightAnswers = 0;
     private AnimatorSet frontAnimation;
     private AnimatorSet backAnimation;
+
+    private View view;
+    private CardRecyclerViewAdapter adapter;
 
     private SensorManager sensorManager;
 
@@ -62,6 +67,8 @@ public class StudyModeFragment extends Fragment {
         deck = activity.getDeckViewModel().getDeck();
         index = 0;
         cards = new ArrayList<Card>(deck.getCards());
+        wrongCards = new ArrayList<Card>();
+
 
         sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         Objects.requireNonNull(sensorManager).registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
@@ -78,6 +85,7 @@ public class StudyModeFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.view = view;
         binding.txtDeckTitle.setText(deck.getTitle());
         setupCardFlip(view);
 
@@ -94,7 +102,7 @@ public class StudyModeFragment extends Fragment {
         binding.btnWrongAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                wrongAnswers++;
+                wrongCards.add(currentCard);
                 animate();
                 SetDataFields();
             }
@@ -176,11 +184,18 @@ public class StudyModeFragment extends Fragment {
             binding.cardFront.setVisibility(View.INVISIBLE);
             binding.cardBack.setVisibility(View.INVISIBLE);
 
+            Context context = view.getContext();
+            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.cardList);
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+            adapter = new CardRecyclerViewAdapter(wrongCards, activity, true);
+            recyclerView.setAdapter(adapter);
+
             binding.txtRightAnswers.setText("Number of right answers: " + rightAnswers);
 
-            binding.txtWrongAnswers.setText("Number of wrong answers: " + wrongAnswers);
+            binding.txtWrongAnswers.setText("Number of wrong answers: " + wrongCards.size());
 
-            double percentage = (double)rightAnswers/(double)(wrongAnswers + rightAnswers) * 100;
+            double percentage = (double)rightAnswers/(double)(wrongCards.size() + rightAnswers) * 100;
             if(Double.isNaN(percentage))
                 percentage = 0;
 

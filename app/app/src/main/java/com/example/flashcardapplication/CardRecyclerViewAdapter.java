@@ -32,9 +32,18 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerVi
     private List<Card> cards;
     private List<Card> data;
     private MainActivity activity;
+    private boolean studyMode;
+
+    public ViewHolder holder;
+
 
     public CardRecyclerViewAdapter(List<Card> items, Context context) {
+        this(items, context, false);
+
+    }
+    public CardRecyclerViewAdapter(List<Card> items, Context context, boolean study) {
         activity = (MainActivity) context;
+        studyMode = study;
         cards = items;
         data = items;
         if(cards == null){
@@ -63,6 +72,8 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerVi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+
+        this.holder = holder;
         holder.card = cards.get(position);
         holder.question.setText(cards.get(position).getFront());
         holder.answer.setText(cards.get(position).getBack());
@@ -78,6 +89,10 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerVi
                 return true;
             }
         });
+        if(studyMode)
+        {
+            holder.deleteButton.setVisibility(View.INVISIBLE);
+        }
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
