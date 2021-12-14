@@ -1,9 +1,12 @@
 package com.example.flashcardapplication;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -205,6 +208,27 @@ public class CardListFragment extends Fragment {
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                if(deck.getTitle() == null || deck.getTitle().equals("")){
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+                    alertDialogBuilder.setTitle("Title cannot be empty");
+                    alertDialogBuilder.setMessage("No new deck will be created");
+                    alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
+                            navController.popBackStack();
+                            dialogInterface.cancel();
+                        }
+                    });
+                    alertDialogBuilder.setCancelable(true);
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+
+                    return;
+                }
+
+
+
                 String message = "";
                 if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_CREATE) {
                     activity.getDeckViewModel().setState(DeckViewModel.State.CREATED);
@@ -398,6 +422,7 @@ public class CardListFragment extends Fragment {
                         adapter.notifyDataSetChanged();
                         try {
                             activity.getCardDBHandler().getCardTable().update(item.getUpdatedCard());
+                            activity.showSnackbar("Card edited successfully!");
                         } catch (DatabaseException e) {
                             e.printStackTrace();
                         }
@@ -408,10 +433,8 @@ public class CardListFragment extends Fragment {
                         }
                         adapter.notifyDataSetChanged();
                         try {
-                            System.out.println(activity.getCardDBHandler().getCardTable().readAll().size());
                             activity.getCardDBHandler().getCardTable().create(item.getUpdatedCard());
-                            System.out.println(item.getUpdatedCard().getFront());
-                            System.out.println(activity.getCardDBHandler().getCardTable().readAll().size());
+                            activity.showSnackbar("Card created successfully!");
                         } catch (DatabaseException e) {
                             e.printStackTrace();
                         }

@@ -2,6 +2,8 @@ package com.example.flashcardapplication;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -176,6 +178,25 @@ public class EditCardFragment extends Fragment {
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                if(card.getFront() == null || card.getFront().equals("") || card.getBack() == null || card.getBack().equals("")){
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+                    alertDialogBuilder.setTitle("Question and Answer cannot be left empty");
+                    alertDialogBuilder.setMessage("No new card will be created");
+                    alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
+                            navController.popBackStack();
+                            dialogInterface.cancel();
+                        }
+                    });
+                    alertDialogBuilder.setCancelable(true);
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+
+                    return;
+                }
+
                 String message = "";
                 if(activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_CREATE) {
                     activity.getCardViewModel().setState(CardViewModel.State.CREATED);

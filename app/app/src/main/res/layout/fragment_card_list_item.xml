@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="#4CAF50"
         android:orientation="horizontal">
 
         <TextView
@@ -38,6 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="#CD3B3B"
         android:orientation="horizontal">
 
         <TextView
