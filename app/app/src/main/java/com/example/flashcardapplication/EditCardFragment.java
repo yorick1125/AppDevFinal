@@ -2,7 +2,12 @@ package com.example.flashcardapplication;
 
 
 import android.Manifest;
+
 import android.app.Activity;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -43,6 +48,7 @@ import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.example.flashcardapplication.viewmodel.CardViewModel;
 import com.example.flashcardapplication.viewmodel.DeckViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.io.IOException;
@@ -153,8 +159,7 @@ public class EditCardFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                activity.getCardViewModel().getCard().setFront(charSequence.toString());
-                //activity.getCardViewModel().notifyChange();
+                card.setFront(charSequence.toString());
                 cardFront.setText(charSequence.toString());
             }
 
@@ -171,8 +176,7 @@ public class EditCardFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                activity.getCardViewModel().getCard().setBack(charSequence.toString());
-                //activity.getCardViewModel().notifyChange();
+                card.setBack(charSequence.toString());
                 cardBack.setText(charSequence.toString());
             }
 
@@ -185,18 +189,43 @@ public class EditCardFragment extends Fragment {
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                if(card.getFront() == null || card.getFront().equals("") || card.getBack() == null || card.getBack().equals("")){
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+                    alertDialogBuilder.setTitle("Question and Answer cannot be left empty");
+                    alertDialogBuilder.setMessage("No new card will be created");
+                    alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
+                            navController.popBackStack();
+                            dialogInterface.cancel();
+                        }
+                    });
+                    alertDialogBuilder.setCancelable(true);
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
 
+                    return;
+                }
+
+                String message = "";
                 if(activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_CREATE) {
                     activity.getCardViewModel().setState(CardViewModel.State.CREATED);
+                    message = "Card created successfully!";
                 }
                 else if (activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_EDIT){
                     activity.getCardViewModel().setState(CardViewModel.State.EDITED);
+                    message = "Card edited successfully!";
                 }
+                card.setDeckId(activity.getDeckViewModel().getDeck().getId());
                 activity.getCardViewModel().setUpdatedCard(card);
                 activity.getCardViewModel().notifyChange();
                 NavController controller = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
                 controller.popBackStack();
+                Snackbar snackbar = Snackbar
+                        .make(activity.getBinding().getRoot(), message, 2000);
 
+                snackbar.show();
 
             }
         });

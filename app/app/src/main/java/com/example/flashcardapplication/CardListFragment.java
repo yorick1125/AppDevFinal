@@ -1,10 +1,15 @@
 package com.example.flashcardapplication;
 
+
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Matrix;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -20,6 +25,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.CalendarContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -49,6 +55,7 @@ import com.example.flashcardapplication.viewmodel.CardViewModel;
 import com.example.flashcardapplication.viewmodel.DeckViewModel;
 import com.example.flashcardapplication.viewmodel.ObservableModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 
 import java.text.SimpleDateFormat;
@@ -77,6 +84,10 @@ public class CardListFragment extends Fragment {
     private static int currentTaskNotificationId = 0;
     private MainActivity activity;
     private static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
+
+    private EditText title;
+    private Spinner description;
+    private TextView date;
 
 
     /**
@@ -154,7 +165,6 @@ public class CardListFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
             {
                 deck.setSubject((Subjects) parentView.getItemAtPosition(position));
-                activity.getDeckViewModel().setUpdatedDeck(deck);
             }
 
             @Override
@@ -172,9 +182,18 @@ public class CardListFragment extends Fragment {
             }
         });
         FloatingActionButton fab = view.findViewById(R.id.addCardFab);
+
+        if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_CREATE){
+            fab.setVisibility(View.GONE);
+        }
+        else{
+            fab.setVisibility(View.VISIBLE);
+        }
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 activity.getCardViewModel().setCard(new Card());
                 activity.getCardViewModel().setState(CardViewModel.State.BEFORE_CREATE);
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
@@ -196,27 +215,95 @@ public class CardListFragment extends Fragment {
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                if(deck.getTitle() == null || deck.getTitle().equals("")){
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+                    alertDialogBuilder.setTitle("Title cannot be empty");
+                    alertDialogBuilder.setMessage("No new deck will be created");
+                    alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
+                            navController.popBackStack();
+                            dialogInterface.cancel();
+                        }
+                    });
+                    alertDialogBuilder.setCancelable(true);
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
 
+                    return;
+                }
+
+
+
+                String message = "";
                 if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_CREATE) {
                     activity.getDeckViewModel().setState(DeckViewModel.State.CREATED);
+                    message = "Deck created successfully";
                 }
                 else if (activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_EDIT){
                     activity.getDeckViewModel().setState(DeckViewModel.State.EDITED);
+                    message = "Deck edited successfully";
                 }
                 activity.getDeckViewModel().setUpdatedDeck(deck);
                 activity.getDeckViewModel().notifyChange();
                 NavController controller = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
                 controller.popBackStack();
 
+
                 // check if due date is past current date and check if it is null
                 if( deck.getDueDate() != null && deck.getDueDate().getTime() > new Date().getTime()){
+
+                    title = activity.findViewById(R.id.titleEditText);
+                    description = activity.findViewById(R.id.subjectSpinner);
+                    date = activity.findViewById(R.id.dueDateTextView);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+                    builder.setTitle("Select your answer.");
+                    builder.setMessage("Would you like to set a calendar date?");
+
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            if(!title.getText().toString().isEmpty() && !date.getText().toString().isEmpty()){
+                                Intent intent = new Intent(Intent.ACTION_INSERT);
+                                intent.setData(CalendarContract.Events.CONTENT_URI);
+                                intent.putExtra(CalendarContract.Events.TITLE, title.getText().toString());
+                                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, deck.getDueDate().getTime());
+                                intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, deck.getDueDate().getTime()+10);
+                                intent.putExtra(CalendarContract.Events.DESCRIPTION, description.getSelectedItem().toString() + " cards");
+
+
+                                activity.startActivity(intent);
+                            }
+                        }
+                    });
+
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(context,"No Button Clicked",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+
+
+
                     // override run so it does the notification once its past the due date
                     Thread thread = new Thread(new Runnable() {
                         @Override
                         public void run() {
                             try {
-                                Thread.sleep(deck.getDueDate().getTime() - (new Date().getTime() - MILLIS_IN_A_DAY));
-                                dayBeforeNotification();
+                                if(deck.getDueDate().getTime() - MILLIS_IN_A_DAY > new Date().getTime()){
+                                    Long sleepTime = (deck.getDueDate().getTime() - MILLIS_IN_A_DAY) - new Date().getTime();
+                                    Thread.sleep(sleepTime);
+                                    dayBeforeNotification();
+                                }
                                 Thread.sleep(deck.getDueDate().getTime() - new Date().getTime());
                                 overdueNotification();
                             } catch (InterruptedException e) {
@@ -226,6 +313,10 @@ public class CardListFragment extends Fragment {
                     });
                     thread.start();
                 }
+                Snackbar snackbar = Snackbar
+                        .make(activity.getBinding().getRoot(), message, 2000);
+
+                snackbar.show();
 
             }
         });
@@ -330,12 +421,14 @@ public class CardListFragment extends Fragment {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
-                calendar.set(Calendar.HOUR_OF_DAY, 8);
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
+                calendar.set(Calendar.HOUR_OF_DAY, 23);
+                calendar.set(Calendar.MINUTE, 59);
+                calendar.set(Calendar.SECOND, 59);
+                calendar.set(Calendar.MILLISECOND, 59);
                 Date date = calendar.getTime();
                 deck.setDueDate(date);
+
+
 
                 // check if date is old
                 if(date.before(new Date())){
@@ -377,20 +470,25 @@ public class CardListFragment extends Fragment {
         activity.getCardViewModel().addOnUpdateListener(this, new ObservableModel.OnUpdateListener<CardViewModel>() {
             @Override
             public void onUpdate(CardViewModel item){
-                /*
                 switch (item.getState()) {
                     case EDITED:
                         adapter.setCard(item.getUpdatedCard());
+                        adapter.notifyDataSetChanged();
                         try {
-                            cardTable.update(item.getUpdatedCard());
+                            activity.getCardDBHandler().getCardTable().update(item.getUpdatedCard());
+                            activity.showSnackbar("Card edited successfully!");
                         } catch (DatabaseException e) {
                             e.printStackTrace();
                         }
                         break;
                     case CREATED:
-                        adapter.addCard(item.getUpdatedCard());
+                        if(deck != null){
+                            deck.getCards().add(item.getUpdatedCard());
+                        }
+                        adapter.notifyDataSetChanged();
                         try {
-                            cardTable.create(item.getUpdatedCard());
+                            activity.getCardDBHandler().getCardTable().create(item.getUpdatedCard());
+                            activity.showSnackbar("Card created successfully!");
                         } catch (DatabaseException e) {
                             e.printStackTrace();
                         }
@@ -402,7 +500,6 @@ public class CardListFragment extends Fragment {
                         // do nothing
                 }
 
-                 */
                 // TODO: maybe? item.setState(TasksViewModel.State.NONE);
 
             }

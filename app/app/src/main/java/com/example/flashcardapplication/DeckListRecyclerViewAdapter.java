@@ -6,6 +6,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.shapes.Shape;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.example.flashcardapplication.enums.Subjects;
 import com.example.flashcardapplication.model.Deck;
 import com.example.flashcardapplication.databinding.FragmentHomePageBinding;
 import com.example.flashcardapplication.sqlite.DatabaseException;
@@ -63,14 +68,14 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.bind(decks.get(position));
-
         holder.deck = decks.get(position);
+        holder.setColor();
         holder.nameTextView.setText(String.valueOf(decks.get(position).getTitle()));
         if(decks.get(position).getSubject() != null){
             holder.subjectTextView.setText(decks.get(position).getSubject().toString());
         }
         if(decks.get(position).getDueDate() != null) {
-            holder.dueDateTextView.setText(decks.get(position).getDueDate().toString());
+            holder.dueDateTextView.setText(decks.get(position).getDueString());
         }
         
         holder.deckItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
@@ -85,6 +90,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
                 return true;
             }
         });
+
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,7 +106,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
         });
     }
 
-    public void setDeck(Deck deck) {
+    public boolean setDeck(Deck deck) {
         int pos = 0;
         for(Deck d : decks) {
             if (d.getId() == deck.getId())
@@ -111,7 +117,9 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
             decks.set(pos, deck);
             //notifyItemChanged(pos);
             notifyDataSetChanged();
+            return true;
         }
+        return false;
         // TODO error if not found?
     }
 
@@ -126,6 +134,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        public final FragmentHomePageBinding binding;
         public final TextView nameTextView;
         public final TextView subjectTextView;
         public final TextView dueDateTextView;
@@ -136,6 +145,7 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
 
         public ViewHolder(FragmentHomePageBinding binding) {
             super(binding.getRoot());
+            this.binding = binding;
             nameTextView = binding.deckName;
             subjectTextView = binding.deckSubject;
             dueDateTextView = binding.deckDueDate;
@@ -156,6 +166,32 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
 
 
 
+        }
+
+        public void setColor(){
+            switch(deck.getSubject()){
+                case English:
+                    deckItemLayout.getBackground().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP);
+                    break;
+                case French:
+                    deckItemLayout.getBackground().setColorFilter(Color.parseColor("#ff8c00"), PorterDuff.Mode.SRC_ATOP);
+                    break;
+                case Math:
+                    deckItemLayout.getBackground().setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+                    break;
+                case History:
+                    deckItemLayout.getBackground().setColorFilter(Color.parseColor("#9400d3"), PorterDuff.Mode.SRC_ATOP);
+                    break;
+                case Science:
+                    deckItemLayout.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
+                    break;
+                case Art:
+                    deckItemLayout.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
+                    break;
+                case None:
+                    deckItemLayout.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
+                    break;
+            }
         }
 
         public void bind(Deck deck) {

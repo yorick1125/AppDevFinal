@@ -33,13 +33,15 @@ public class DeckDBHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, int i, int i1) {
         // to do im not sure what goes here
-        database.execSQL("DROP TABLE IF EXISTS " + deckTable.getName());
-        onCreate(database);
+        System.out.println("UPGRADE");
+        //database.execSQL("DROP TABLE IF EXISTS " + deckTable.getName());
+        //onCreate(database);
     }
     @Override
     public void onDowngrade(SQLiteDatabase database, int i, int i1) {
         // not sure what needs to go in here
-        database.execSQL("DROP TABLE IF EXISTS " + deckTable.getName());
-        onCreate(database);
+        System.out.println("DOWNGRADE");
+        //database.execSQL("DROP TABLE IF EXISTS " + deckTable.getName());
+        //onCreate(database);
     }
 }
