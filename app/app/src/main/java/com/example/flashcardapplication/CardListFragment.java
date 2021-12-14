@@ -1,5 +1,6 @@
 package com.example.flashcardapplication;
 
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -8,6 +9,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Matrix;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -23,6 +25,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.CalendarContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -81,6 +84,10 @@ public class CardListFragment extends Fragment {
     private static int currentTaskNotificationId = 0;
     private MainActivity activity;
     private static final long MILLIS_IN_A_DAY = 1000 * 60 * 60 * 24;
+
+    private EditText title;
+    private Spinner description;
+    private TextView date;
 
 
     /**
@@ -243,15 +250,60 @@ public class CardListFragment extends Fragment {
                 NavController controller = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
                 controller.popBackStack();
 
+
                 // check if due date is past current date and check if it is null
                 if( deck.getDueDate() != null && deck.getDueDate().getTime() > new Date().getTime()){
+
+                    title = activity.findViewById(R.id.titleEditText);
+                    description = activity.findViewById(R.id.subjectSpinner);
+                    date = activity.findViewById(R.id.dueDateTextView);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+                    builder.setTitle("Select your answer.");
+                    builder.setMessage("Would you like to set a calendar date?");
+
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            if(!title.getText().toString().isEmpty() && !date.getText().toString().isEmpty()){
+                                Intent intent = new Intent(Intent.ACTION_INSERT);
+                                intent.setData(CalendarContract.Events.CONTENT_URI);
+                                intent.putExtra(CalendarContract.Events.TITLE, title.getText().toString());
+                                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, deck.getDueDate().getTime());
+                                intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, deck.getDueDate().getTime()+10);
+                                intent.putExtra(CalendarContract.Events.DESCRIPTION, description.getSelectedItem().toString() + " cards");
+
+
+                                activity.startActivity(intent);
+                            }
+                        }
+                    });
+
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(context,"No Button Clicked",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+
+
+
                     // override run so it does the notification once its past the due date
                     Thread thread = new Thread(new Runnable() {
                         @Override
                         public void run() {
                             try {
-                                Thread.sleep(deck.getDueDate().getTime() - (new Date().getTime() - MILLIS_IN_A_DAY));
-                                dayBeforeNotification();
+                                if(deck.getDueDate().getTime() - MILLIS_IN_A_DAY > new Date().getTime()){
+                                    Long sleepTime = (deck.getDueDate().getTime() - MILLIS_IN_A_DAY) - new Date().getTime();
+                                    Thread.sleep(sleepTime);
+                                    dayBeforeNotification();
+                                }
                                 Thread.sleep(deck.getDueDate().getTime() - new Date().getTime());
                                 overdueNotification();
                             } catch (InterruptedException e) {
@@ -369,12 +421,14 @@ public class CardListFragment extends Fragment {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
-                calendar.set(Calendar.HOUR_OF_DAY, 8);
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
+                calendar.set(Calendar.HOUR_OF_DAY, 23);
+                calendar.set(Calendar.MINUTE, 59);
+                calendar.set(Calendar.SECOND, 59);
+                calendar.set(Calendar.MILLISECOND, 59);
                 Date date = calendar.getTime();
                 deck.setDueDate(date);
+
+
 
                 // check if date is old
                 if(date.before(new Date())){
