@@ -99,19 +99,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextAnswer" />
 
-    <ImageView
-        android:id="@+id/cardImageView"
-        android:layout_width="90dp"
-        android:layout_height="68dp"
-        android:src="@drawable/ic_launcher_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.704"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="263dp" />
-
     <!--Add a textview for back part of the card-->
 
     <!--Add a Button that will apply flip on the card-->
+    <ImageView
+        android:id="@+id/cardImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.533"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cameraBtn" />
+
     <TextView
         android:id="@+id/card_back"
         android:layout_width="226dp"
@@ -122,11 +123,11 @@
         android:textAlignment="center"
         android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintHorizontal_bias="0.518"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.615" />
+        app:layout_constraintTop_toBottomOf="@+id/cardImageView"
+        app:layout_constraintVertical_bias="0.305" />
 
     <TextView
         android:id="@+id/card_front"
@@ -138,11 +139,11 @@
         android:textAlignment="center"
         android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintHorizontal_bias="0.518"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.615" />
+        app:layout_constraintTop_toBottomOf="@+id/cardImageView"
+        app:layout_constraintVertical_bias="0.305" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
