@@ -22,6 +22,7 @@ import com.example.flashcardapplication.databinding.FragmentStudyModeBinding;
 import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.model.Deck;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -182,9 +183,8 @@ public class StudyModeFragment extends Fragment {
             double percentage = (double)rightAnswers/(double)(wrongAnswers + rightAnswers) * 100;
             if(Double.isNaN(percentage))
                 percentage = 0;
-            Log.v("Percentage", String.valueOf(percentage));
 
-            binding.txtResultPercentage.setText(percentage + "%");
+            binding.txtResultPercentage.setText(String.format("%.2f", percentage) + "%");
             binding.layoutStudyResult.setVisibility(View.VISIBLE);
         }
     }
