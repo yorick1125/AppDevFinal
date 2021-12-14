@@ -26,6 +26,8 @@ public class Card implements Identifiable<Long> {
         this.id = 0L;
         this.front = "";
         this.back = "";
+        this.deckId = -1L;
+        this.imageUri = null;
     }
     public Card(String front, String back, Long deckId){
         this.id = id;
@@ -84,6 +86,15 @@ public class Card implements Identifiable<Long> {
 
     public Card setUri(Uri imageUri) {
         this.imageUri = imageUri;
+        return this;
+    }
+
+    public Card setUri(String path) {
+        if(path == null || path == ""){
+            return this;
+        }
+
+        this.imageUri = Uri.parse(path);
         return this;
     }
 

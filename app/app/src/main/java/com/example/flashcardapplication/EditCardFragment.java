@@ -22,6 +22,7 @@ import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -48,6 +49,7 @@ import android.widget.TextView;
 
 import com.example.flashcardapplication.model.Card;
 import com.example.flashcardapplication.viewmodel.CardViewModel;
+import com.example.flashcardapplication.viewmodel.DeckViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
@@ -153,6 +155,12 @@ public class EditCardFragment extends Fragment {
                 editTextAnswer.setText(card.getBack());
             }
         }
+        if(activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_CREATE){
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Create Card");
+        }
+        else if(activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_EDIT){
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Edit Card");
+        }
         editTextQuestion.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -191,6 +199,8 @@ public class EditCardFragment extends Fragment {
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                System.out.println("CARD URI " + card.getUri());
+
                 if(card.getFront() == null || card.getFront().equals("") || card.getBack() == null || card.getBack().equals("")){
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
                     alertDialogBuilder.setTitle("Question and Answer cannot be left empty");
@@ -210,24 +220,20 @@ public class EditCardFragment extends Fragment {
                     return;
                 }
 
-                String message = "";
                 if(activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_CREATE) {
                     activity.getCardViewModel().setState(CardViewModel.State.CREATED);
-                    message = "Card created successfully!";
                 }
                 else if (activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_EDIT){
                     activity.getCardViewModel().setState(CardViewModel.State.EDITED);
-                    message = "Card edited successfully!";
+                }
+                else{
+                    activity.showSnackbar("none");
                 }
                 card.setDeckId(activity.getDeckViewModel().getDeck().getId());
                 activity.getCardViewModel().setUpdatedCard(card);
                 activity.getCardViewModel().notifyChange();
                 NavController controller = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
                 controller.popBackStack();
-                Snackbar snackbar = Snackbar
-                        .make(activity.getBinding().getRoot(), message, 2000);
-
-                snackbar.show();
 
             }
         });

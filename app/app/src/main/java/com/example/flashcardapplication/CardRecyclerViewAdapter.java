@@ -51,7 +51,7 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerVi
         }
     }
 
-    public List<Card> getTasks(){
+    public List<Card> getCards(){
         return cards;
     }
     public List<Card> getData(){

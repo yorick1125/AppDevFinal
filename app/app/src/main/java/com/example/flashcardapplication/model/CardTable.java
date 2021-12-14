@@ -54,7 +54,7 @@ public class CardTable extends Table<Card> {
                 .setFront(cursor.getString(1))
                 .setBack(cursor.getString(2))
                 .setDeckId(cursor.getLong(3))
-                .setUri(Uri.parse(cursor.getString(4)));
+                .setUri(cursor.getString(4));
 
         return card;
     }

@@ -16,6 +16,7 @@ import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
@@ -126,6 +127,12 @@ public class CardListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_card_list, container, false);
         activity = (MainActivity) getActivity();
         deck = activity.getDeckViewModel().getDeck();
+        if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_CREATE){
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Create Deck");
+        }
+        else if(activity.getDeckViewModel().getState() == DeckViewModel.State.BEFORE_EDIT){
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Edit Deck");
+        }
         //binding = FragmentCardListBinding.inflate(inflater, container, false);
 
         // Set the adapter
@@ -492,12 +499,14 @@ public class CardListFragment extends Fragment {
                         }
                         break;
                     case CREATED:
-                        if(deck != null){
-                            deck.getCards().add(item.getUpdatedCard());
-                        }
+//                        if(deck != null){
+                            adapter.getCards().add(item.getUpdatedCard());
+  //                      }
                         adapter.notifyDataSetChanged();
                         try {
+                            System.out.println(activity.getCardDBHandler().getCardTable().readAll().size());
                             activity.getCardDBHandler().getCardTable().create(item.getUpdatedCard());
+                            System.out.println(activity.getCardDBHandler().getCardTable().readAll().size());
                             activity.showSnackbar("Card created successfully!");
                         } catch (DatabaseException e) {
                             e.printStackTrace();
