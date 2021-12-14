@@ -38,6 +38,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -88,6 +89,7 @@ public class CardListFragment extends Fragment {
     private EditText title;
     private Spinner description;
     private TextView date;
+    private Switch calendarSwitch;
 
 
     /**
@@ -257,6 +259,7 @@ public class CardListFragment extends Fragment {
                     title = activity.findViewById(R.id.titleEditText);
                     description = activity.findViewById(R.id.subjectSpinner);
                     date = activity.findViewById(R.id.dueDateTextView);
+                    calendarSwitch = activity.findViewById(R.id.calendarEventSwitch);
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
@@ -288,10 +291,14 @@ public class CardListFragment extends Fragment {
                         }
                     });
 
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
-
+                    System.out.println(calendarSwitch);
+                    System.out.println(activity.findViewById(R.id.calendarEventSwitch));
+                    System.out.println(activity);
+                    activity.findViewById(R.id.calendarEventSwitch);
+                    if(calendarSwitch.isChecked()){
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
 
 
                     // override run so it does the notification once its past the due date

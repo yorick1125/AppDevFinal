@@ -21,10 +21,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/switchTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Add To Calendar:"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <EditText
             android:id="@+id/titleEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:hint="Enter Title"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toTopOf="@+id/subjectSpinner"
@@ -37,7 +50,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:text="Title:"
@@ -54,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
             android:text="Subject:"
             android:textColor="#000000"
             android:textSize="20sp"
@@ -79,11 +91,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
             android:text="Due Date:"
             android:textColor="#000000"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/switchTextView"
             app:layout_constraintEnd_toStartOf="@+id/dueDateTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/subjectTextView" />
@@ -92,10 +104,10 @@
             android:id="@+id/dueDateTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
             android:text="date"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/calendarEventSwitch"
             app:layout_constraintEnd_toStartOf="@+id/dueDateButton"
             app:layout_constraintStart_toEndOf="@+id/dueDateTitleTextView"
             app:layout_constraintTop_toBottomOf="@+id/subjectSpinner" />
@@ -105,12 +117,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/ic_baseline_calendar_today_24"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/dueDateTextView"
             app:layout_constraintTop_toBottomOf="@+id/subjectSpinner" />
+
+        <Switch
+            android:id="@+id/calendarEventSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/switchTextView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
