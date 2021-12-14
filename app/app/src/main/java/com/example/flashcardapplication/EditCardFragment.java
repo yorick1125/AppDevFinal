@@ -6,18 +6,17 @@ import android.Manifest;
 import android.app.Activity;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.content.Context;
 
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -38,6 +37,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 
 import android.widget.EditText;
@@ -47,17 +47,13 @@ import android.widget.Toast;
 import android.widget.TextView;
 
 import com.example.flashcardapplication.model.Card;
-import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.example.flashcardapplication.viewmodel.CardViewModel;
-import com.example.flashcardapplication.viewmodel.DeckViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,6 +64,7 @@ public class EditCardFragment extends Fragment {
 
     public static final int CAMERA_PERM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE = 102;
+    public static final int GALLERY_REQUEST_CODE = 105;
     ImageView selectedImage;
     Button cameraBtn,galleryBtn;
     String currentPhotoPath;
@@ -134,11 +131,14 @@ public class EditCardFragment extends Fragment {
         galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText( getContext(), "Gallery Button is Clicked",Toast.LENGTH_SHORT).show();
+                Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(gallery,GALLERY_REQUEST_CODE);
             }
         });
         setupCardFlip(view);
-
+        if(card.getUri() != null){
+            selectedImage.setImageURI(card.getUri());
+        }
         EditText editTextQuestion = (EditText) view.findViewById(R.id.editTextQuestion);
         EditText editTextAnswer = (EditText) view.findViewById(R.id.editTextAnswer);
         TextView cardFront = (TextView) view.findViewById(R.id.card_front);
@@ -255,16 +255,12 @@ public class EditCardFragment extends Fragment {
         }
     }
 
-//    private void openCamera() {
-//        Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        startActivityForResult(camera,CAMERA_REQUEST_CODE);
-//    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == CAMERA_REQUEST_CODE){
-//            Bitmap image = (Bitmap) data.getExtras().get("data");
-//            selectedImage.setImageBitmap(image);
+
             if(resultCode == Activity.RESULT_OK){
                 File f = new File(currentPhotoPath);
                 selectedImage.setImageURI(Uri.fromFile(f));
@@ -273,12 +269,28 @@ public class EditCardFragment extends Fragment {
                 Uri contentUri = Uri.fromFile(f);
                 mediaScanIntent.setData(contentUri);
                 getContext().sendBroadcast(mediaScanIntent);
-
+                card.setUri(contentUri);
+            }
+        }
+        if(requestCode == GALLERY_REQUEST_CODE){
+            if(resultCode == Activity.RESULT_OK){
+               Uri contentUri = data.getData();
+               String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+               String imageFileName = "JPEG_" + timeStamp +"."+getFileExt(contentUri);
+               Log.d("tag", "onActivityResult: Gallery Image Uri: " + imageFileName);
+               selectedImage.setImageURI(contentUri);
+               card.setUri(contentUri);
             }
         }
 
+
     }
 
+    private String getFileExt(Uri contentUri) {
+        ContentResolver c = getActivity().getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return  mime.getExtensionFromMimeType(c.getType(contentUri));
+    }
 
 
     private File createImageFile() throws IOException {
