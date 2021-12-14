@@ -2,7 +2,6 @@ package com.example.flashcardapplication.model;
 
 import com.example.flashcardapplication.sqlite.Identifiable;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,27 +74,6 @@ public class Card implements Identifiable<Long> {
         this.deckId = deckId;
         return this;
     }
-<<<<<<< Updated upstream
-=======
-    public Uri getUri() {
-        return imageUri;
-    }
-
-    public Card setUri(Uri imageUri) {
-        this.imageUri = imageUri;
-        return this;
-    }
-
-    public Card setUri(String path) {
-        if(path == null){
-            return this;
-        }
-        this.imageUri = Uri.parse(path);
-        return this;
-    }
-
-
->>>>>>> Stashed changes
 
 
 

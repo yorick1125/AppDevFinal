@@ -44,12 +44,7 @@ public class CardTable extends Table<Card> {
                 .setCardId(cursor.getLong(0))
                 .setFront(cursor.getString(1))
                 .setBack(cursor.getString(2))
-<<<<<<< Updated upstream
                 .setDeckId(cursor.getLong(3));
-=======
-                .setDeckId(cursor.getLong(3))
-                .setUri(cursor.getString(4));
->>>>>>> Stashed changes
 
         return card;
     }

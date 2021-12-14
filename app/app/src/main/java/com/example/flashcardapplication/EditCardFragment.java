@@ -125,17 +125,7 @@ public class EditCardFragment extends Fragment {
             }
         });
         setupCardFlip(view);
-<<<<<<< Updated upstream
 
-=======
-        if(card.getUri() != null){
-            selectedImage.setImageURI(card.getUri());
-            selectedImage.setVisibility(View.VISIBLE);
-        }
-        else{
-            selectedImage.setVisibility(View.GONE);
-        }
->>>>>>> Stashed changes
         EditText editTextQuestion = (EditText) view.findViewById(R.id.editTextQuestion);
         EditText editTextAnswer = (EditText) view.findViewById(R.id.editTextAnswer);
         TextView cardFront = (TextView) view.findViewById(R.id.card_front);
@@ -260,34 +250,8 @@ public class EditCardFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == CAMERA_REQUEST_CODE){
-<<<<<<< Updated upstream
             Bitmap image = (Bitmap) data.getExtras().get("data");
             selectedImage.setImageBitmap(image);
-=======
-
-            if(resultCode == Activity.RESULT_OK){
-                File f = new File(currentPhotoPath);
-                selectedImage.setImageURI(Uri.fromFile(f));
-                Log.d("tag","Absolute Url of Image is " + Uri.fromFile(f));
-                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = Uri.fromFile(f);
-                mediaScanIntent.setData(contentUri);
-                getContext().sendBroadcast(mediaScanIntent);
-                card.setUri(contentUri);
-                System.out.println("setting camera uri");
-            }
-        }
-        if(requestCode == GALLERY_REQUEST_CODE){
-            if(resultCode == Activity.RESULT_OK){
-               Uri contentUri = data.getData();
-               String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-               String imageFileName = "JPEG_" + timeStamp +"."+getFileExt(contentUri);
-               Log.d("tag", "onActivityResult: Gallery Image Uri: " + imageFileName);
-               selectedImage.setImageURI(contentUri);
-               card.setUri(contentUri);
-               System.out.println("setting gallery uri");
-            }
->>>>>>> Stashed changes
         }
 
     }
