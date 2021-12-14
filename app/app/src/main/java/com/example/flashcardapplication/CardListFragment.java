@@ -1,10 +1,13 @@
 package com.example.flashcardapplication;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Matrix;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -217,27 +220,44 @@ public class CardListFragment extends Fragment {
                 // check if due date is past current date and check if it is null
                 if( deck.getDueDate() != null && deck.getDueDate().getTime() > new Date().getTime()){
 
-                    title = (EditText) activity.findViewById(R.id.titleEditText);
+                    title = activity.findViewById(R.id.titleEditText);
                     description = activity.findViewById(R.id.subjectSpinner);
                     date = activity.findViewById(R.id.dueDateTextView);
 
-                    if(!title.getText().toString().isEmpty() && !date.getText().toString().isEmpty()){
-                        Intent intent = new Intent(Intent.ACTION_INSERT);
-                        intent.setData(CalendarContract.Events.CONTENT_URI);
-                        intent.putExtra(CalendarContract.Events.TITLE, title.getText().toString());
-                        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, deck.getDueDate().getTime());
-                        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, deck.getDueDate().getTime()+10);
-                        intent.putExtra(CalendarContract.Events.DESCRIPTION, description.getSelectedItem().toString() + " cards");
-                        //PendingIntent pendingIntent = PendingIntent.getActivity(activity,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+                    builder.setTitle("Select your answer.");
+                    builder.setMessage("Would you like to set a calendar date?");
+
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            if(!title.getText().toString().isEmpty() && !date.getText().toString().isEmpty()){
+                                Intent intent = new Intent(Intent.ACTION_INSERT);
+                                intent.setData(CalendarContract.Events.CONTENT_URI);
+                                intent.putExtra(CalendarContract.Events.TITLE, title.getText().toString());
+                                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, deck.getDueDate().getTime());
+                                intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, deck.getDueDate().getTime()+10);
+                                intent.putExtra(CalendarContract.Events.DESCRIPTION, description.getSelectedItem().toString() + " cards");
 
 
-                        startActivity(intent);
-//                        if(intent.resolveActivity(activity.getPackageManager()) != null){
-//                            startActivity(intent);
-//                        }else{
-//                            Toast.makeText(activity,"There is no app that can support this action",Toast.LENGTH_SHORT).show();
-//                        }
-                    }
+                                activity.startActivity(intent);
+                            }
+                        }
+                    });
+
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(context,"No Button Clicked",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+
 
 
                     // override run so it does the notification once its past the due date
