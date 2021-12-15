@@ -4,10 +4,13 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 
 import com.example.flashcardapplication.sqlite.Column;
 import com.example.flashcardapplication.sqlite.DatabaseException;
 import com.example.flashcardapplication.sqlite.Table;
+
+import java.net.URI;
 
 public class CardTable extends Table<Card> {
 
@@ -15,6 +18,7 @@ public class CardTable extends Table<Card> {
     public static final String COLUMN_FRONT = "front";
     public static final String COLUMN_BACK = "back";
     public static final String COLUMN_DECKID = "deckId";
+    public static final String COLUMN_URI = "uri";
 
 
     /**
@@ -27,6 +31,7 @@ public class CardTable extends Table<Card> {
         addColumn(new Column(COLUMN_FRONT, Column.Type.TEXT));
         addColumn(new Column(COLUMN_BACK, Column.Type.TEXT));
         addColumn(new Column(COLUMN_DECKID , Column.Type.TEXT));
+        addColumn(new Column(COLUMN_URI , Column.Type.TEXT));
     }
 
     @Override
@@ -35,6 +40,10 @@ public class CardTable extends Table<Card> {
         values.put(COLUMN_FRONT, card.getFront());
         values.put(COLUMN_BACK, card.getBack());
         values.put(COLUMN_DECKID, card.getDeckId());
+        if(card.getUri() != null){
+            values.put(COLUMN_URI, card.getUri().toString());
+        }
+
         return values;
     }
 
@@ -44,7 +53,8 @@ public class CardTable extends Table<Card> {
                 .setCardId(cursor.getLong(0))
                 .setFront(cursor.getString(1))
                 .setBack(cursor.getString(2))
-                .setDeckId(cursor.getLong(3));
+                .setDeckId(cursor.getLong(3))
+                .setUri(cursor.getString(4));
 
         return card;
     }

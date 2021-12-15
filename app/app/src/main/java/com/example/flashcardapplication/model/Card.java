@@ -1,5 +1,7 @@
 package com.example.flashcardapplication.model;
 
+import android.net.Uri;
+
 import com.example.flashcardapplication.sqlite.Identifiable;
 
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ public class Card implements Identifiable<Long> {
     private String front;
     private String back;
     private Long deckId;
+    private Uri imageUri;
 
     public static List<Card> getDefaultCards(){
         List<Card> cards = new ArrayList<>();
@@ -23,12 +26,15 @@ public class Card implements Identifiable<Long> {
         this.id = 0L;
         this.front = "";
         this.back = "";
+        this.deckId = -1L;
+        this.imageUri = null;
     }
     public Card(String front, String back, Long deckId){
         this.id = id;
         this.front = front;
         this.back = back;
         this.deckId = deckId;
+
     }
 
     public Long getId(){
@@ -74,6 +80,25 @@ public class Card implements Identifiable<Long> {
         this.deckId = deckId;
         return this;
     }
+    public Uri getUri() {
+        return imageUri;
+    }
+
+    public Card setUri(Uri imageUri) {
+        this.imageUri = imageUri;
+        return this;
+    }
+
+    public Card setUri(String path) {
+        if(path == null || path == ""){
+            return this;
+        }
+
+        this.imageUri = Uri.parse(path);
+        return this;
+    }
+
+
 
 
 

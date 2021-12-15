@@ -41,7 +41,7 @@
     <fragment
         android:id="@+id/studyModeFragment"
         android:name="com.example.flashcardapplication.StudyModeFragment"
-        android:label="fragment_study_mode"
+        android:label="Study Mode"
         tools:layout="@layout/fragment_study_mode">
         <action
             android:id="@+id/action_studyModeFragment_to_homePageFragment"
