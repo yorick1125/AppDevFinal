@@ -116,7 +116,6 @@ public class EditCardFragment extends Fragment {
     }
 
     @Override
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_card, container, false);
         activity = (MainActivity) getActivity();
@@ -135,6 +134,8 @@ public class EditCardFragment extends Fragment {
             public void onClick(View view) {
                 Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(gallery,GALLERY_REQUEST_CODE);
+                activity.finishActivity(GALLERY_REQUEST_CODE);
+
             }
         });
         setupCardFlip(view);
@@ -204,7 +205,15 @@ public class EditCardFragment extends Fragment {
             }
         });
 
-        getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+        return view;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        activity = (MainActivity) getActivity();
+        activity.getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 System.out.println("CARD URI " + card.getUri());
@@ -245,8 +254,6 @@ public class EditCardFragment extends Fragment {
 
             }
         });
-
-        return view;
     }
 
     private void askCameraPermissions() {
@@ -296,8 +303,21 @@ public class EditCardFragment extends Fragment {
                card.setUri(contentUri);
             }
         }
-
-
+        if(resultCode == Activity.RESULT_OK)
+        {
+            if(activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_CREATE) {
+                activity.getCardViewModel().setState(CardViewModel.State.CREATED);
+            }
+            else if (activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_EDIT){
+                activity.getCardViewModel().setState(CardViewModel.State.EDITED);
+            }
+            else{
+                activity.showSnackbar("none");
+            }
+            card.setDeckId(activity.getDeckViewModel().getDeck().getId());
+            activity.getCardViewModel().setUpdatedCard(card);
+            activity.getCardViewModel().notifyChange();
+        }
     }
 
     private String getFileExt(Uri contentUri) {
@@ -326,7 +346,7 @@ public class EditCardFragment extends Fragment {
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
-//        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             // Create the File where the photo should go
             File photoFile = null;
             try {
@@ -342,8 +362,9 @@ public class EditCardFragment extends Fragment {
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+                activity.finishActivity(CAMERA_REQUEST_CODE);
             }
-//        }
+        }
     }
     public void setupCardFlip(View view){
         Context applicationContext = getActivity().getApplicationContext();
