@@ -27,6 +27,7 @@ import com.example.flashcardapplication.model.Deck;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -70,6 +71,7 @@ public class StudyModeFragment extends Fragment {
         deck = activity.getDeckViewModel().getDeck();
         index = 0;
         cards = new ArrayList<Card>(deck.getCards());
+        Collections.shuffle(cards);
         wrongCards = new ArrayList<Card>();
         questionImage = binding.questionImageView;
 
@@ -174,12 +176,21 @@ public class StudyModeFragment extends Fragment {
     {
         if(index < cards.size())
         {
+            if(!isFront)
+            {
+                animate();
+            }
             binding.layoutStudyResult.setVisibility(View.INVISIBLE);
             binding.layoutStudyAnswer.setVisibility(View.INVISIBLE);
             binding.layoutStudyQuestion.setVisibility(View.VISIBLE);
             currentCard = cards.get(index);
-            if(currentCard != null){
+            if(currentCard.getUri() != null){
+                questionImage.setVisibility(View.VISIBLE);
                 questionImage.setImageURI(currentCard.getUri());
+            }
+            else
+            {
+                questionImage.setVisibility(View.GONE);
             }
             binding.cardFront.setText(currentCard.getFront());
             index++;
@@ -256,7 +267,6 @@ public class StudyModeFragment extends Fragment {
             frontAnimation.start();
             backAnimation.start();
             isFront = false;
-
         }
         else
         {
