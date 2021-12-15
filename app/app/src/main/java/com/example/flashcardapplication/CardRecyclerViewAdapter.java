@@ -77,35 +77,39 @@ public class CardRecyclerViewAdapter extends RecyclerView.Adapter<CardRecyclerVi
         holder.card = cards.get(position);
         holder.question.setText(cards.get(position).getFront());
         holder.answer.setText(cards.get(position).getBack());
-        holder.cardItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                activity.getCardViewModel().setCard(holder.card);
-                activity.getCardViewModel().setState(CardViewModel.State.BEFORE_EDIT);
-                activity.getCardViewModel().notifyChange();
-
-                NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
-                navController.navigate(R.id.action_cardListFragment_to_editCardFragment);
-                return true;
-            }
-        });
         if(studyMode)
         {
             holder.deleteButton.setVisibility(View.INVISIBLE);
         }
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cards.remove(holder.card);
-                data.remove(holder.card);
-                try {
-                    activity.getCardDBHandler().getCardTable().delete(holder.card);
-                } catch (DatabaseException e) {
-                    e.printStackTrace();
+        else
+        {
+            holder.cardItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    activity.getCardViewModel().setCard(holder.card);
+                    activity.getCardViewModel().setState(CardViewModel.State.BEFORE_EDIT);
+                    activity.getCardViewModel().notifyChange();
+
+                    NavController navController = Navigation.findNavController(activity, R.id.nav_host_fragment_content_main);
+                    navController.navigate(R.id.action_cardListFragment_to_editCardFragment);
+                    return true;
                 }
-                notifyDataSetChanged();
-            }
-        });
+            });
+
+            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cards.remove(holder.card);
+                    data.remove(holder.card);
+                    try {
+                        activity.getCardDBHandler().getCardTable().delete(holder.card);
+                    } catch (DatabaseException e) {
+                        e.printStackTrace();
+                    }
+                    notifyDataSetChanged();
+                }
+            });
+        }
     }
 
     public void setCard(Card card) {

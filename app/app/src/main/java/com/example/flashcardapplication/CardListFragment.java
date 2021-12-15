@@ -189,7 +189,7 @@ public class CardListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("TAG", "onClick: ");
-                chooseDateAndTime(false, view);
+                chooseDateAndTime(view);
             }
         });
         FloatingActionButton fab = view.findViewById(R.id.addCardFab);
@@ -256,8 +256,10 @@ public class CardListFragment extends Fragment {
                     activity.getDeckViewModel().setState(DeckViewModel.State.EDITED);
                     message = "Deck edited successfully";
                 }
+
                 activity.getDeckViewModel().setUpdatedDeck(deck);
                 activity.getDeckViewModel().notifyChange();
+
                 NavController controller = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_content_main);
                 controller.popBackStack();
 
@@ -409,7 +411,7 @@ public class CardListFragment extends Fragment {
         notificationManager.notify(currentTaskNotificationId++, builder.build());
     }
 
-    private void chooseDateAndTime(boolean istrue, View view){
+    private void chooseDateAndTime(View view){
 
         // default date and time
         Date date = new Date();
@@ -421,7 +423,7 @@ public class CardListFragment extends Fragment {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         date = calendar.getTime();
-        if(istrue){
+        if(deck.getDueDate() != null){
             date = deck.getDueDate();
         }
         TextView dueDateTextView = (TextView) view.findViewById(R.id.dueDateTextView);
@@ -451,6 +453,7 @@ public class CardListFragment extends Fragment {
                     Toast.makeText(getContext(),"Can't be old date",Toast.LENGTH_LONG).show();
                 }
                 else{
+                    deck.setDueDate(date);
                     // format the date
                     String dayFormat = new SimpleDateFormat("EEEE").format(date);
                     String monthFormat = new SimpleDateFormat("MMMM").format(date);
@@ -500,7 +503,7 @@ public class CardListFragment extends Fragment {
                         break;
                     case CREATED:
 //                        if(deck != null){
-                            adapter.getCards().add(item.getUpdatedCard());
+                            deck.getCards().add(item.getUpdatedCard());
   //                      }
                         adapter.notifyDataSetChanged();
                         try {

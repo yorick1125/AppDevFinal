@@ -156,10 +156,18 @@ public class DeckListRecyclerViewAdapter extends RecyclerView.Adapter<DeckListRe
                 @Override
                 public void onClick(View view) {
 
-                    activity.getDeckViewModel().setDeck(deck);
+                    if(deck.getCards().size() > 0)
+                    {
+                        activity.getDeckViewModel().setDeck(deck);
 
-                    Navigation.findNavController(view)
-                            .navigate(R.id.action_homePageFragment_to_studyModeFragment);
+                        Navigation.findNavController(view)
+                                .navigate(R.id.action_homePageFragment_to_studyModeFragment);
+                    }
+                    else
+                    {
+                        activity.showSnackbar("Cannot play an empty deck");
+                    }
+
                 }
             });
 
