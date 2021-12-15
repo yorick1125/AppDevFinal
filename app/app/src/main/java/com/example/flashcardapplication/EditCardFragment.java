@@ -157,6 +157,14 @@ public class EditCardFragment extends Fragment {
         }
         if(activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_CREATE){
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Create Card");
+            TextView imageTextView = view.findViewById(R.id.imageTextView);
+            Button cameraBtn = view.findViewById(R.id.cameraBtn);
+            Button galleryBtn = view.findViewById(R.id.galleryBtn);
+            ImageView imageView = view.findViewById(R.id.cardImageView);
+            imageView.setVisibility(View.GONE);
+            imageTextView.setVisibility(View.GONE);
+            cameraBtn.setVisibility(View.GONE);
+            galleryBtn.setVisibility(View.GONE);
         }
         else if(activity.getCardViewModel().getState() == CardViewModel.State.BEFORE_EDIT){
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Edit Card");
