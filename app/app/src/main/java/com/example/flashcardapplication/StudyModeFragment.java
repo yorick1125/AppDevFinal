@@ -174,12 +174,21 @@ public class StudyModeFragment extends Fragment {
     {
         if(index < cards.size())
         {
+            if(!isFront)
+            {
+                animate();
+            }
             binding.layoutStudyResult.setVisibility(View.INVISIBLE);
             binding.layoutStudyAnswer.setVisibility(View.INVISIBLE);
             binding.layoutStudyQuestion.setVisibility(View.VISIBLE);
             currentCard = cards.get(index);
-            if(currentCard != null){
+            if(currentCard.getUri() != null){
+                questionImage.setVisibility(View.VISIBLE);
                 questionImage.setImageURI(currentCard.getUri());
+            }
+            else
+            {
+                questionImage.setVisibility(View.GONE);
             }
             binding.cardFront.setText(currentCard.getFront());
             index++;
@@ -256,7 +265,6 @@ public class StudyModeFragment extends Fragment {
             frontAnimation.start();
             backAnimation.start();
             isFront = false;
-
         }
         else
         {

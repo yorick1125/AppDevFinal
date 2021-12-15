@@ -132,10 +132,8 @@ public class EditCardFragment extends Fragment {
         galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent gallery = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent gallery = new Intent(Intent.ACTION_OPEN_DOCUMENT,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(gallery,GALLERY_REQUEST_CODE);
-                activity.finishActivity(GALLERY_REQUEST_CODE);
-
             }
         });
         setupCardFlip(view);
@@ -346,7 +344,7 @@ public class EditCardFragment extends Fragment {
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+        //if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             // Create the File where the photo should go
             File photoFile = null;
             try {
@@ -362,9 +360,8 @@ public class EditCardFragment extends Fragment {
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
-                activity.finishActivity(CAMERA_REQUEST_CODE);
             }
-        }
+        //}
     }
     public void setupCardFlip(View view){
         Context applicationContext = getActivity().getApplicationContext();
