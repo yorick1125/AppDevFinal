@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -57,6 +58,8 @@ public class StudyModeFragment extends Fragment {
 
     private long lastShake;
 
+    ImageView questionImage;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -68,7 +71,7 @@ public class StudyModeFragment extends Fragment {
         index = 0;
         cards = new ArrayList<Card>(deck.getCards());
         wrongCards = new ArrayList<Card>();
-
+        questionImage = binding.questionImageView;
 
         sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         Objects.requireNonNull(sensorManager).registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
@@ -90,7 +93,9 @@ public class StudyModeFragment extends Fragment {
         setupCardFlip(view);
 
         SetDataFields();
-
+        if(currentCard != null){
+            questionImage.setImageURI(currentCard.getUri());
+        }
         binding.btnSkipQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,6 +130,8 @@ public class StudyModeFragment extends Fragment {
                         .navigate(R.id.action_studyModeFragment_to_homePageFragment);
             }
         });
+
+
     }
 
     private final SensorEventListener sensorListener = new SensorEventListener() {
