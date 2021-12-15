@@ -27,6 +27,7 @@ import com.example.flashcardapplication.model.Deck;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -70,6 +71,7 @@ public class StudyModeFragment extends Fragment {
         deck = activity.getDeckViewModel().getDeck();
         index = 0;
         cards = new ArrayList<Card>(deck.getCards());
+        Collections.shuffle(cards);
         wrongCards = new ArrayList<Card>();
         questionImage = binding.questionImageView;
 
