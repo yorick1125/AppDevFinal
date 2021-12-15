@@ -93,9 +93,7 @@ public class StudyModeFragment extends Fragment {
         setupCardFlip(view);
 
         SetDataFields();
-        if(currentCard != null){
-            questionImage.setImageURI(currentCard.getUri());
-        }
+
         binding.btnSkipQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,6 +178,9 @@ public class StudyModeFragment extends Fragment {
             binding.layoutStudyAnswer.setVisibility(View.INVISIBLE);
             binding.layoutStudyQuestion.setVisibility(View.VISIBLE);
             currentCard = cards.get(index);
+            if(currentCard != null){
+                questionImage.setImageURI(currentCard.getUri());
+            }
             binding.cardFront.setText(currentCard.getFront());
             index++;
         }
