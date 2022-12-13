@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Deck implements Identifiable<Long> {
+public class   Deck implements Identifiable<Long> {
     private static SimpleDateFormat formatter =  new SimpleDateFormat("EEEE, MMMM dd, YYYY @ h:mm aa");
 
     private Long id;

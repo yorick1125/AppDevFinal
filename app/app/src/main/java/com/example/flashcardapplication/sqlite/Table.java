@@ -215,19 +215,24 @@ public abstract class Table<T extends Identifiable<Long>> implements CRUDReposit
         List<T> elements = new ArrayList<>();
 
         String[] selection = getSelectAll();
-        Cursor cursor = database.query(name, selection, null, null, null, null, null);
-        if(cursor != null) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                T element = fromCursor(cursor);
-                element.setId(cursor.getLong(0));
-                element.setId(cursor.getLong(0));
-                elements.add(element);
-                cursor.moveToNext();
+        try{
+            Cursor cursor = database.query(name, selection, null, null, null, null, null);
+            if(cursor != null) {
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    T element = fromCursor(cursor);
+                    element.setId(cursor.getLong(0));
+                    element.setId(cursor.getLong(0));
+                    elements.add(element);
+                    cursor.moveToNext();
+                }
+                // makeFactory sure to close the cursor
+                cursor.close();
             }
-            // makeFactory sure to close the cursor
-            cursor.close();
         }
+        catch(Exception e){
+        }
+
         return elements;
     }
 
